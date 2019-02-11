@@ -84,7 +84,8 @@ $(function () {
         if (event.keyCode === 13) {
             var theText = $(this).val();
             drawio.selectedElement.render(theText);
-            drawio.shapes.push(theText);
+            drawio.shapes.push(drawio.selectedElement);
+            console.log(drawio.shapes);
             $("#idTextBox").val('');
 	        $("#idTextBox").hide();
         }

@@ -90,6 +90,7 @@ Draw.prototype.render = function() {
 Text.prototype.render = function(theText) {
     drawio.ctx.font = "30px Arial";
     drawio.ctx.fillText(theText, this.position.x, this.position.y);
+    
 };
 
 Rectangle.prototype.resize = function (x, y) {
