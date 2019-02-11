@@ -30,13 +30,15 @@
                 transition: color .5s;
 
             }
+            .top-container {
+                height: 50px;
+                width: 100%;
+            }
             .picker {
-                height: 25px;
-                float: left;
+                position: relative;
+                display: inline-block;
             }
-            .color-picker {
-                height: 40px;
-            }
+
             .icon:hover {
                 color: orange;
                 cursor: pointer;
@@ -49,6 +51,13 @@
                 background-color: rgba(50, 100, 200, 0.5);
                 border-bottom: solid 6px rgba(50, 100, 200, 1);
             }
+            .undo:hover {
+                color: red;
+                cursor: pointer;
+            }
+            #idTextBox {
+            position:absolute;
+        }
         </style>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
        
@@ -67,19 +76,27 @@
             <div class="icon" data-shape="line">
                 <i class="fa fa-arrows-v" area-hidden="true"></i>
             </div>
-            <!--<div class="icon" data-shape="text">
+            <div class="icon" data-shape="text">
                 <i class="fa fa-font" area-hidden="true"></i>
-            </div> -->
+            </div> 
         </nav>
-        <div class = "picker">
-            <label for="color">Color:</label>
-            <input type="color"  class="color-picker" value="#000000" name="color">
+        <div class = "top-container">
+            <div class ="picker">
+                <label for="color">Color:</label>
+                <input type="color"  class="color-picker" value="#000000" name="color">
+            </div>
+            <div class="picker">
+                <input type="range" name="width" min="1" max="42" value="15" class="width-picker" id="myRange">
+                <p>width: <span id="demo"></span></p>
+            </div>
         </div>
         <div class="container">
             <canvas id="my-canvas" width="800" height="600">
                 Not supported
             </canvas>
+            <input type="text" id="idTextBox" name="text" hidden></input>
         </div>
+        
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js" charset="utf-8"></script>
         <script src="shapes.js" charset="utf-8"></script>
         <script src="drawio.js" charset="utf-8"></script>
