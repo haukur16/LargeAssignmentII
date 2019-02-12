@@ -89,6 +89,20 @@
                 <input type="range" name="width" min="1" max="42" value="15" class="width-picker" id="myRange">
                 <p>width: <span id="demo"></span></p>
             </div>
+            <div>
+                <div class="font-pick">
+                <label for="font-type">Font Type:</label>
+                    <select id="selectFontFamily" name="selectFontFamily" onchange="updatefamily();">
+                        <option> Serif </option>
+                        <option> Arial </option>
+                        <option> Sans-Serif </option>                                  
+                        <option> Tahoma </option>
+                        <option> Verdana </option>
+                        <option> Lucida Sans Unicode </option>                               
+                    </select>
+                </div>
+            </div>
+            
         </div>
         <div class="container">
             <canvas id="my-canvas" width="800" height="600">
@@ -97,6 +111,16 @@
             <input type="text" id="idTextBox" name="text" hidden></input>
         </div>
         
+        
+          <script>
+            function updatefamily() {
+              var selector = document.getElementById('selectFontFamily');
+              var family = selector.options[selector.selectedIndex].value;
+              var textt = document.getElementsByClassName('fa-font')
+              textt.style.fontFamily = family;        
+            }
+      
+          </script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js" charset="utf-8"></script>
         <script src="shapes.js" charset="utf-8"></script>
         <script src="drawio.js" charset="utf-8"></script>
