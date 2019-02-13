@@ -36,17 +36,26 @@ $(function () {
         drawio.selectedShape = $(this).data('shape');
     });
 
-    /*$('#undo').on('click', function() {
-        let shapes = drawio.shapes;
-        let removeArr = shapes.pop();
-        drawio.removedShapes.push(removeArr);
-        for (var i=0; i<drawio.shapes.length; i++) {
-            drawio.shapes[i].render();
+    $('#undo').on('click', function() {
+        if (drawio.shapes.length > 0) {
+            let undo = drawio.shapes.pop();
+            drawio.removedShapes.push(undo);
+            drawio.ctx.clearRect(0, 0, drawio.canvas.width, drawio.canvas.height);
+            drawCanvas();
+            console.log(drawio.removedShapes);
+            console.log(drawio.shapes);
         }
-
-        //drawio.removedShapes.push(drawio.shapes.pop());
-        console.log(drawio.removedShapes);
-    });*/
+    });
+    $('#redo').on('click', function() {
+        if (drawio.removedShapes.length > 0) {
+            let redo = drawio.removedShapes.pop();
+            drawio.shapes.push(redo);
+            drawio.ctx.clearRect(0, 0, drawio.canvas.width, drawio.canvas.height);
+            drawCanvas();
+            console.log(drawio.removedShapes);
+            console.log(drawio.shapes);
+        }
+    });
 
     
     
@@ -74,17 +83,13 @@ $(function () {
     });
     $('#my-canvas').on('mousemove', function(mouseEvent) {
        if (drawio.selectedElement) {
-           if(drawio.selectedShape == "text") {
-               $(drawio.textBox).css({"top": mouseEvent.pageY, "left": mouseEvent.pageX});
-               drawio.selectedElement.resize(mouseEvent.offsetX, mouseEvent.offsetY);
-           }
-           else {
             console.log(drawio.selectedElement);
             drawio.ctx.clearRect(0, 0, drawio.canvas.width, drawio.canvas.height);
             drawio.selectedElement.resize(mouseEvent.offsetX, mouseEvent.offsetY);
             drawCanvas();
-           }
+    
         }
+    
     });
 
     $('#my-canvas').on('mouseup', function(){
@@ -96,8 +101,11 @@ $(function () {
         event.preventDefault();
         if (event.keyCode === 13) {
             drawio.selectedElement.textBox = $(this).val();
-            drawio.selectedElement.render();
+            drawio.ctx.clearRect(0, 0, drawio.canvas.width, drawio.canvas.height);
+            drawio.selectedElement.resize(event.offsetX, event.offsetY);
+            drawCanvas();
             drawio.shapes.push(drawio.selectedElement);
+            drawio.selectedElement = null;
             console.log(drawio.shapes);
             $("#idTextBox").val('');
 	        $("#idTextBox").hide();
