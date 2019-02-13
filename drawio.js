@@ -3,6 +3,7 @@ window.drawio = {
     shapes: [],
     removedShapes: [],
     selectedShape: 'draw',
+    fontFamilyPick: 'Arial',
     canvas: document.getElementById('my-canvas'),
     ctx: document.getElementById('my-canvas').getContext('2d'),
     colorPick: document.querySelector('.color-picker'),
@@ -57,8 +58,10 @@ $(function () {
         }
     });
 
-    
-    
+    $('select').on('change', function () {
+        drawio.fontFamilyPick = this.value;
+    })
+
     $('#my-canvas').on('mousedown', function(mouseEvent) {
         switch (drawio.selectedShape) {
             case drawio.availableShapes.RECTANGLE:
@@ -74,11 +77,11 @@ $(function () {
             drawio.selectedElement = new Draw({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, drawio.colorPick, drawio.widthPick);
             break;
             case drawio.availableShapes.TEXT:
-            drawio.selectedElement = new Text({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, drawio.textBox, drawio.colorPick, 0);
+            drawio.selectedElement = new Text({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, drawio.textBox, drawio.colorPick, drawio.fontFamilyPick);
             $(drawio.textBox).css({"top": mouseEvent.pageY, "left": mouseEvent.pageX});
 			$(drawio.textBox).show();
             break;
-            
+
         }
     });
     $('#my-canvas').on('mousemove', function(mouseEvent) {
@@ -87,9 +90,9 @@ $(function () {
             drawio.ctx.clearRect(0, 0, drawio.canvas.width, drawio.canvas.height);
             drawio.selectedElement.resize(mouseEvent.offsetX, mouseEvent.offsetY);
             drawCanvas();
-    
+
         }
-    
+
     });
 
     $('#my-canvas').on('mouseup', function(){
@@ -121,4 +124,3 @@ output.innerHTML = slider.value;
 slider.oninput = function() {
   output.innerHTML = this.value;
 }
-

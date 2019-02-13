@@ -30,11 +30,11 @@ function Draw(position, colorPick, widthPick) {
     this.widthPick = widthPick.value;
     this.arrx = [];
 };
-function Text(position, textBox, colorPick) {
+function Text(position, textBox, colorPick, fontFamilyPick) {
     Shape.call(this, position);
     this.textBox = textBox.value;
     this.colorPick = colorPick.value;
-
+    this.fontFamilyPick = fontFamilyPick;
     console.log(this.position.x, this.position.y)
 
 };
@@ -73,7 +73,7 @@ Circle.prototype.render = function() {
     drawio.ctx.stroke();
 };
 Draw.prototype.render = function() {
-    
+
     drawio.ctx.beginPath();
     drawio.ctx.strokeStyle = this.colorPick;
     drawio.ctx.lineWidth = this.widthPick;
@@ -87,7 +87,7 @@ Draw.prototype.render = function() {
     drawio.ctx.closePath();
 };
 Text.prototype.render = function() {
-    drawio.ctx.font = "30px Arial";
+    drawio.ctx.font = '30px ' + this.fontFamilyPick;
     drawio.ctx.fillStyle = this.colorPick;
     drawio.ctx.fillText(this.textBox, this.position.x, this.position.y);
 };
@@ -113,5 +113,3 @@ Text.prototype.resize = function (x, y) {
     this.width = x - this.position.x;
     this.height = y - this.position.y;
 };
-
-
