@@ -30,14 +30,13 @@ function Draw(position, colorPick, widthPick) {
     this.widthPick = widthPick.value;
     this.arrx = [];
 };
-function Text(position, textBox, width, height) {
+function Text(position, textBox, colorPick) {
     Shape.call(this, position);
-    this.width = width;
-    this.height = height;
     this.textBox = textBox.value;
+    this.colorPick = colorPick.value;
 
     console.log(this.position.x, this.position.y)
-    
+
 };
 
 
@@ -87,10 +86,10 @@ Draw.prototype.render = function() {
     drawio.ctx.stroke();
     drawio.ctx.closePath();
 };
-Text.prototype.render = function(theText) {
+Text.prototype.render = function() {
     drawio.ctx.font = "30px Arial";
-    drawio.ctx.fillText(theText, this.position.x, this.position.y);
-    
+    drawio.ctx.fillStyle = this.colorPick;
+    drawio.ctx.fillText(this.textBox, this.position.x, this.position.y);
 };
 
 Rectangle.prototype.resize = function (x, y) {

@@ -1,6 +1,7 @@
 
 window.drawio = {
     shapes: [],
+    removedShapes: [],
     selectedShape: 'draw',
     canvas: document.getElementById('my-canvas'),
     ctx: document.getElementById('my-canvas').getContext('2d'),
@@ -35,6 +36,18 @@ $(function () {
         drawio.selectedShape = $(this).data('shape');
     });
 
+    /*$('#undo').on('click', function() {
+        let shapes = drawio.shapes;
+        let removeArr = shapes.pop();
+        drawio.removedShapes.push(removeArr);
+        for (var i=0; i<drawio.shapes.length; i++) {
+            drawio.shapes[i].render();
+        }
+
+        //drawio.removedShapes.push(drawio.shapes.pop());
+        console.log(drawio.removedShapes);
+    });*/
+
     
     
     $('#my-canvas').on('mousedown', function(mouseEvent) {
@@ -52,10 +65,11 @@ $(function () {
             drawio.selectedElement = new Draw({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, drawio.colorPick, drawio.widthPick);
             break;
             case drawio.availableShapes.TEXT:
-            drawio.selectedElement = new Text({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, drawio.textBox, 0, 0);
+            drawio.selectedElement = new Text({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, drawio.textBox, drawio.colorPick, 0);
             $(drawio.textBox).css({"top": mouseEvent.pageY, "left": mouseEvent.pageX});
 			$(drawio.textBox).show();
             break;
+            
         }
     });
     $('#my-canvas').on('mousemove', function(mouseEvent) {
@@ -80,16 +94,16 @@ $(function () {
     });
     $('#idTextBox').on('keyup', function(event){
         event.preventDefault();
-        console.log('hi');
         if (event.keyCode === 13) {
-            var theText = $(this).val();
-            drawio.selectedElement.render(theText);
+            drawio.selectedElement.textBox = $(this).val();
+            drawio.selectedElement.render();
             drawio.shapes.push(drawio.selectedElement);
             console.log(drawio.shapes);
             $("#idTextBox").val('');
 	        $("#idTextBox").hide();
         }
     });
+
 });
 
 var slider = document.getElementById("myRange");
