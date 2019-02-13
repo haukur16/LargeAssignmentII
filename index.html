@@ -37,6 +37,7 @@
             .picker {
                 position: relative;
                 display: inline-block;
+                height: 100%;
             }
 
             .icon:hover {
@@ -79,6 +80,9 @@
             <div class="icon" data-shape="text">
                 <i class="fa fa-font" area-hidden="true"></i>
             </div> 
+            <div class="icon" id="move" data-shape="move">
+                <i class="fa fa-arrows" area-hidden="true"></i>
+            </div>   
         </nav>
         <div class = "top-container">
             <div class ="picker">
@@ -94,7 +98,7 @@
             </div>
             <div class="picker" id="redo" data-shape="redo">
                 <button class="fa fa-repeat" area-hidden="true" ></button>
-            </div>  
+            </div>
             <div>
                 <div class="font-pick">
                 <label for="font-type">Font Type:</label>

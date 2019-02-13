@@ -34,10 +34,13 @@ function Text(position, textBox, colorPick) {
     Shape.call(this, position);
     this.textBox = textBox.value;
     this.colorPick = colorPick.value;
-
-    console.log(this.position.x, this.position.y)
-
 };
+function Move(position, textBox, colorPick) {
+    Shape.call(this, position);
+    this.textBox = textBox.value;
+    this.colorPick = colorPick.value;
+};
+
 
 
 Rectangle.prototype = Object.create(Shape.prototype);
@@ -45,13 +48,14 @@ Line.prototype = Object.create(Shape.prototype);
 Circle.prototype = Object.create(Shape.prototype);
 Draw.prototype = Object.create(Shape.prototype);
 Text.prototype = Object.create(Shape.prototype);
-
+Move.prototype = Object.create(Shape.prototype);
 
 Rectangle.prototype.constuctor = Rectangle;
 Line.prototype.constuctor = Line;
 Circle.prototype.constuctor = Circle;
 Draw.prototype.constuctor = Draw;
 Text.prototype.constuctor = Text;
+Move.prototype.constuctor = Text;
 
 Rectangle.prototype.render = function() {
     drawio.ctx.fillStyle = this.colorPick;
@@ -91,6 +95,11 @@ Text.prototype.render = function() {
     drawio.ctx.fillStyle = this.colorPick;
     drawio.ctx.fillText(this.textBox, this.position.x, this.position.y);
 };
+Move.prototype.render = function() {
+    
+};
+
+
 
 Rectangle.prototype.resize = function (x, y) {
     this.width = x - this.position.x;
@@ -110,6 +119,10 @@ Draw.prototype.resize = function (x, y) {
     this.arrx.push({x: x , y: y});
 };
 Text.prototype.resize = function (x, y) {
+    this.width = x - this.position.x;
+    this.height = y - this.position.y;
+};
+Move.prototype.resize = function (x, y) {
     this.width = x - this.position.x;
     this.height = y - this.position.y;
 };

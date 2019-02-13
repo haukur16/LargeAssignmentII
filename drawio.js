@@ -15,7 +15,8 @@ window.drawio = {
         CIRCLE: 'circle',
         LINE: 'line',
         DRAW: 'draw',
-        TEXT: 'text'
+        TEXT: 'text',
+        MOVE: 'move'
     }
 };
 
@@ -56,7 +57,6 @@ $(function () {
             console.log(drawio.shapes);
         }
     });
-
     
     
     $('#my-canvas').on('mousedown', function(mouseEvent) {
@@ -81,6 +81,7 @@ $(function () {
             
         }
     });
+    
     $('#my-canvas').on('mousemove', function(mouseEvent) {
        if (drawio.selectedElement) {
             console.log(drawio.selectedElement);
