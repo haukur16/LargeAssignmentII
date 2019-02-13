@@ -61,7 +61,7 @@
         }
         </style>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
-       
+
     </head>
     <body>
         <nav class="navbar">
@@ -102,17 +102,17 @@
             <div>
                 <div class="font-pick">
                 <label for="font-type">Font Type:</label>
-                    <select id="selectFontFamily" name="selectFontFamily" onchange="updatefamily();">
-                        <option> Serif </option>
+                    <select id="selectFontFamily" name="selectFontFamily">
                         <option> Arial </option>
-                        <option> Sans-Serif </option>                                  
-                        <option> Tahoma </option>
                         <option> Verdana </option>
-                        <option> Lucida Sans Unicode </option>                               
+                        <option> Times New Roman </option>
+                        <option> Courier New </option>
+                        <option> Serif </option>
+                        <option> Sans-Serif </option>
                     </select>
                 </div>
             </div>
-            
+
         </div>
         <div class="container">
             <canvas id="my-canvas" width="800" height="600">
@@ -120,21 +120,11 @@
             </canvas>
             <input type="text" id="idTextBox" name="text" hidden></input>
         </div>
-        
-        
-          <script>
-            function updatefamily() {
-              var selector = document.getElementById('selectFontFamily');
-              var family = selector.options[selector.selectedIndex].value;
-              var textt = document.getElementsByClassName('fa-font')
-              textt.style.fontFamily = family;        
-            }
-      
-          </script>
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js" charset="utf-8"></script>
         <script src="shapes.js" charset="utf-8"></script>
         <script src="drawio.js" charset="utf-8"></script>
 
-        
+
     </body>
 </html>
