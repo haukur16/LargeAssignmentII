@@ -12,6 +12,7 @@
             body {
                 padding: 0;
                 margin: 0;
+                background-color: #FFE4DE;
             }
             .container {
                 padding: 20px;
@@ -54,19 +55,34 @@
                 background-color: #C70039;
                 border-bottom: solid 6px #900C3F;
             }
+            .header {
+                display: inline-flex;
+                color: yellow;
+                font-size: 30px;
+                margin-left: 50px;
+            }
+            #pencil-pic {
+                width: 90px;
+                height: 100px;
+            }
             .undo:hover {
                 color: red;
                 cursor: pointer;
             }
             #idTextBox {
             position:absolute;
-        }
+            }
+            
         </style>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
 
     </head>
     <body>
         <nav class="navbar">
+            <div class="header">
+                <img id="pencil-pic" src="pencil_icon.png" alt="pencil">
+                <h1>DRAWIO</h1>
+            </div>
             <div class="icon" data-shape="rectangle">
                 <i class="fa fa-square-o" area-hidden="true"></i>
             </div>
@@ -93,7 +109,7 @@
             </div>
             <div class="picker">
                 <input type="range" name="width" min="1" max="42" value="15" class="width-picker" id="myRange">
-                <p>width: <span id="demo"></span></p>
+                <p>Width: <span id="demo"></span></p>
             </div>
             <div class="picker" id="undo" data-shape="undo">
                 <button class="fa fa-undo" area-hidden="true" ></button>
