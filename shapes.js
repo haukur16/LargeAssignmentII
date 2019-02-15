@@ -8,23 +8,56 @@ Shape.prototype.move = function (position) {
 };
 Shape.prototype.resize = function() {};
 
-function Rectangle(position, width, height, colorPick) {
+Shape.prototype.rectaSize = function(theX, theY) {
+    if(this.width >= 0 && this.height >= 0){
+    return (this.position.x <= theX) &&
+            (this.position.x + this.width >= theX) &&
+            (this.position.y <= theY) &&
+            (this.position.y + this.height >= theY)
+    }
+    else if(this.width < 0 && this.height < 0){
+        return (this.position.x >= theX) &&
+        (this.position.x + this.width <= theX) &&
+        (this.position.y >= theY) &&
+        (this.position.y + this.height <= theY)
+    }
+    else if(this.width >= 0 && this.height < 0){
+        return (this.position.x <= theX) &&
+        (this.position.x + this.width >= theX) &&
+        (this.position.y >= theY) &&
+        (this.position.y + this.height <= theY)
+    }
+    else if(this.width < 0 && this.height >= 0){
+        return (this.position.x >= theX) &&
+        (this.position.x + this.width <= theX) &&
+        (this.position.y <= theY) &&
+        (this.position.y + this.height >= theY)
+    }
+};
+
+
+
+function Rectangle(position, width, height, colorPick, isMoveing) {
     Shape.call(this, position);
     this.width = width;
     this.height = height;
     this.colorPick = colorPick.value;
+    this.isMoveing = isMoveing;
 };
-function Line(position, colorPick, widthPick) {
+function Line(position, width, height, widthPick, colorPick, isMoveing) {
+    Shape.call(this, position);
+    this.colorPick = colorPick.value;
+    this.height = height;
+    this.widthPick = widthPick.value;
+    this.width = width.value;
+    this.isMoveing = isMoveing;
+};
+function Circle(position, widthPick, colorPick) {
     Shape.call(this, position);
     this.colorPick = colorPick.value;
     this.widthPick = widthPick.value;
 };
-function Circle(position, colorPick, widthPick) {
-    Shape.call(this, position);
-    this.colorPick = colorPick.value;
-    this.widthPick = widthPick.value;
-};
-function Draw(position, colorPick, widthPick) {
+function Draw(position, widthPick, colorPick) {
     Shape.call(this, position);
     this.colorPick = colorPick.value;
     this.widthPick = widthPick.value;
@@ -38,12 +71,6 @@ function Text(position, textBox, colorPick, fontFamilyPick) {
     console.log(this.position.x, this.position.y);
 }
 
-function Move(position, colorPick, widthPick) {
-    Shape.call(this, position);
-    this.colorPick = colorPick.value;
-    this.widthPick = widthPick.value;
-    this.arrx = [];
-};
 
 
 
@@ -52,18 +79,19 @@ Line.prototype = Object.create(Shape.prototype);
 Circle.prototype = Object.create(Shape.prototype);
 Draw.prototype = Object.create(Shape.prototype);
 Text.prototype = Object.create(Shape.prototype);
-Move.prototype = Object.create(Shape.prototype);
+
 
 Rectangle.prototype.constuctor = Rectangle;
 Line.prototype.constuctor = Line;
 Circle.prototype.constuctor = Circle;
 Draw.prototype.constuctor = Draw;
 Text.prototype.constuctor = Text;
-Move.prototype.constuctor = Text;
+
 
 Rectangle.prototype.render = function() {
     drawio.ctx.fillStyle = this.colorPick;
     drawio.ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+    
 };
 Line.prototype.render = function() {
     drawio.ctx.beginPath();
@@ -99,15 +127,23 @@ Text.prototype.render = function() {
     drawio.ctx.fillStyle = this.colorPick;
     drawio.ctx.fillText(this.textBox, this.position.x, this.position.y);
 };
-Move.prototype.render = function() {
-    
-};
+
 
 
 
 Rectangle.prototype.resize = function (x, y) {
-    this.width = x - this.position.x;
-    this.height = y - this.position.y;
+    if(this.isMoveing) {
+        this.position.x = x;
+        this.position.y = y;
+        this.width = this.width ;
+        this.height = this.height;
+    }
+    else {
+        this.width = x - this.position.x;
+        this.height = y - this.position.y;
+
+    }
+
 };
 Line.prototype.resize = function (x, y) {
     this.width = x - this.position.x;
@@ -123,10 +159,6 @@ Draw.prototype.resize = function (x, y) {
     this.arrx.push({x: x , y: y});
 };
 Text.prototype.resize = function (x, y) {
-    this.width = x - this.position.x;
-    this.height = y - this.position.y;
-};
-Move.prototype.resize = function (x, y) {
     this.width = x - this.position.x;
     this.height = y - this.position.y;
 };
