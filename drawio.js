@@ -97,7 +97,7 @@ $(function () {
             drawio.selectedElement = new Line({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, 0, 0, drawio.widthPick ,drawio.colorPick, drawio.isMoveing);
             break;
             case drawio.availableShapes.CIRCLE:
-            drawio.selectedElement = new Circle({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, drawio.widthPick, drawio.colorPick);
+            drawio.selectedElement = new Circle({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, 0, 0, drawio.widthPick, drawio.colorPick, drawio.isMoveing);
             break;
             case drawio.availableShapes.DRAW:
             drawio.arrx = [];
