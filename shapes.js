@@ -34,8 +34,19 @@ Shape.prototype.rectaSize = function(theX, theY) {
         (this.position.y + this.height >= theY)
     }
 };
-
-
+Shape.prototype.drawSize = function(theX, theY) {
+    if(this.constuctor.name == "Draw") {
+        for(var i = 1; i<this.arrx.length; i++) {
+        var startX = this.arrx[i].x - this.widthPick/2;
+        var endX = this.arrx[i].x + this.widthPick/2;
+        var startY = this.arrx[i].y - this.widthPick/2;
+        var endY= this.arrx[i].y + this.widthPick/2;
+        if((startX <= theX) && (endX >= theX) && (startY <= theY) && (endY >= theY)) {
+            return (startX <= theX) && (endX >= theX) && (startY <= theY) && (endY >= theY);
+        }
+    }
+    }
+};
 
 function Rectangle(position, width, height, colorPick, isMoveing) {
     Shape.call(this, position);
@@ -46,10 +57,10 @@ function Rectangle(position, width, height, colorPick, isMoveing) {
 };
 function Line(position, width, height, widthPick, colorPick, isMoveing) {
     Shape.call(this, position);
-    this.colorPick = colorPick.value;
+    this.width = width.value;
     this.height = height;
     this.widthPick = widthPick.value;
-    this.width = width.value;
+    this.colorPick = colorPick.value;
     this.isMoveing = isMoveing;
 };
 function Circle(position, widthPick, colorPick) {
@@ -57,18 +68,21 @@ function Circle(position, widthPick, colorPick) {
     this.colorPick = colorPick.value;
     this.widthPick = widthPick.value;
 };
-function Draw(position, widthPick, colorPick) {
+function Draw(position, width, height, widthPick, colorPick, isMoveing, arrx) {
     Shape.call(this, position);
     this.colorPick = colorPick.value;
     this.widthPick = widthPick.value;
-    this.arrx = [];
+    this.isMoveing = isMoveing;
+    this.width = width;
+    this.height = height;
+    this.arrx = arrx;
 };
-function Text(position, textBox, colorPick, fontFamilyPick) {
+function Text(position, textBox, colorPick, fontFamilyPick, widthPick, width, height, isMoveing) {
     Shape.call(this, position);
     this.textBox = textBox.value;
     this.colorPick = colorPick.value;
     this.fontFamilyPick = fontFamilyPick;
-    console.log(this.position.x, this.position.y);
+    this.widthPick = widthPick.value;
 }
 
 
@@ -109,21 +123,39 @@ Circle.prototype.render = function() {
     drawio.ctx.stroke();
 };
 Draw.prototype.render = function() {
-
-    drawio.ctx.beginPath();
-    drawio.ctx.strokeStyle = this.colorPick;
-    drawio.ctx.lineWidth = this.widthPick;
-    drawio.ctx.moveTo(this.position.x, this.position.y);
-    for(var i = 1; i<this.arrx.length; i++) {
-        var x = this.arrx[i].x;
-        var y = this.arrx[i].y;
-        drawio.ctx.lineTo(x, y);
+    if(this.isMoveing){
+        var movedDraw = [];
+        drawio.ctx.beginPath();
+        drawio.ctx.strokeStyle = this.colorPick;
+        drawio.ctx.lineWidth = this.widthPick;
+        drawio.ctx.moveTo(this.position.x, this.position.y);
+        for(var i = 0; i<this.arrx.length; i++) {
+            var x = this.position.x - (this.arrx[0].x-this.arrx[i].x);
+            var y = this.position.y - (this.arrx[0].y-this.arrx[i].y);
+            drawio.ctx.lineTo(x, y);
+            movedDraw.push({x: x , y: y});
+        }
+        drawio.ctx.stroke();
+        drawio.ctx.closePath();
+        this.arrx = movedDraw;
     }
-    drawio.ctx.stroke();
-    drawio.ctx.closePath();
+    else {
+        drawio.ctx.beginPath();
+        drawio.ctx.strokeStyle = this.colorPick;
+        drawio.ctx.lineWidth = this.widthPick;
+        drawio.ctx.moveTo(this.position.x, this.position.y);
+        for(var i = 0; i<this.arrx.length; i++) {
+            var x = this.arrx[i].x;
+            var y = this.arrx[i].y;
+            drawio.ctx.lineTo(x, y);
+        }
+        drawio.ctx.stroke();
+        drawio.ctx.closePath();
+    }
+
 };
 Text.prototype.render = function() {
-    drawio.ctx.font = '30px ' + this.fontFamilyPick;
+    drawio.ctx.font = this.widthPick + 'px ' + this.fontFamilyPick;
     drawio.ctx.fillStyle = this.colorPick;
     drawio.ctx.fillText(this.textBox, this.position.x, this.position.y);
 };
@@ -137,11 +169,11 @@ Rectangle.prototype.resize = function (x, y) {
         this.position.y = y;
         this.width = this.width ;
         this.height = this.height;
+
     }
     else {
         this.width = x - this.position.x;
         this.height = y - this.position.y;
-
     }
 
 };
@@ -154,13 +186,21 @@ Circle.prototype.resize = function (x, y) {
     this.height = y - this.position.y;
 };
 Draw.prototype.resize = function (x, y) {
-    this.width = x - this.position.x;
-    this.height = y - this.position.y;
-    this.arrx.push({x: x , y: y});
+    if(this.isMoveing) {
+        this.arrx = this.arrx;
+        this.width = this.width ;
+        this.height = this.height;
+        this.position.x = x;
+        this.position.y = y;
+        
+    }
+    else {
+        this.width = x - this.position.x;
+        this.height = y - this.position.y;
+        this.arrx.push({x: x , y: y});
+    }
 };
 Text.prototype.resize = function (x, y) {
     this.width = x - this.position.x;
     this.height = y - this.position.y;
 };
-
-

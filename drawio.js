@@ -3,6 +3,7 @@ window.drawio = {
     shapes: [],
     removedShapes: [],
     moveingShape: [],
+    arrx: [],
     selectedShape: 'draw',
     fontFamilyPick: 'Arial',
     canvas: document.getElementById('my-canvas'),
@@ -19,7 +20,7 @@ window.drawio = {
         LINE: 'line',
         DRAW: 'draw',
         TEXT: 'text',
-        Move: 'move'
+        MOVE: 'move'
     }
 };
 
@@ -46,8 +47,6 @@ $(function () {
             drawio.removedShapes.push(undo);
             drawio.ctx.clearRect(0, 0, drawio.canvas.width, drawio.canvas.height);
             drawCanvas();
-            console.log(drawio.removedShapes);
-            console.log(drawio.shapes);
         }
     });
     $('#redo').on('click', function() {
@@ -56,16 +55,13 @@ $(function () {
             drawio.shapes.push(redo);
             drawio.ctx.clearRect(0, 0, drawio.canvas.width, drawio.canvas.height);
             drawCanvas();
-            console.log(drawio.removedShapes);
-            console.log(drawio.shapes);
         }
     });
 
     $('select').on('change', function () {
         drawio.fontFamilyPick = this.value;
     })
-
-    $('#my-canvas').on('mousedown', function(mouseEvent) {
+    /*$('#my-canvas').on('mousedown', function(mouseEvent) {
         if(drawio.selectedShape == 'move') {
             var x = mouseEvent.offsetX;
             var y = mouseEvent.offsetY;
@@ -80,9 +76,17 @@ $(function () {
                     drawio.isMoveing = true;
                     drawio.selectedElement = new Rectangle({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, drawio.moveingShape[drawio.moveingShape.length -1].width, drawio.moveingShape[drawio.moveingShape.length -1].height, drawio.colorPick, drawio.isMoveing);
                 }
+                else if(drawio.shapes[i].drawSize(x, y) && drawio.shapes[i].constuctor.name == "Draw" ) {
+                    console.log('hi');
+                    drawio.moveingShape = drawio.shapes.splice(i, 1);
+                    var calling = drawio.moveingShape[drawio.moveingShape.length -1];
+                    drawio.isMoveing = true;
+                    drawio.selectedElement = new Draw({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, calling.width, calling.height, drawio.widthPick, drawio.colorPick, drawio.isMoveing, calling.arrx);
+                }
             }
         }
-    })
+    })*/
+
 
     $('#my-canvas').on('mousedown', function(mouseEvent) {
         switch (drawio.selectedShape) {
@@ -96,22 +100,38 @@ $(function () {
             drawio.selectedElement = new Circle({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, drawio.widthPick, drawio.colorPick);
             break;
             case drawio.availableShapes.DRAW:
-            drawio.selectedElement = new Draw({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, drawio.widthPick, drawio.colorPick);
+            drawio.arrx = [];
+            drawio.selectedElement = new Draw({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, 0, 0, drawio.widthPick, drawio.colorPick, drawio.isMoveing, drawio.arrx);
             break;
             case drawio.availableShapes.TEXT:
-            drawio.selectedElement = new Text({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, drawio.textBox, drawio.colorPick, drawio.fontFamilyPick);
+            drawio.selectedElement = new Text({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, drawio.textBox, drawio.colorPick, drawio.fontFamilyPick, drawio.widthPick, 0, 0);
             $(drawio.textBox).css({"top": mouseEvent.pageY, "left": mouseEvent.pageX});
 			$(drawio.textBox).show();
             break;
-            
-
-        
+            case drawio.availableShapes.MOVE:
+            for(var i = 0; i<drawio.shapes.length; i++) {
+                var x = mouseEvent.offsetX;
+                var y = mouseEvent.offsetY;
+                if(drawio.shapes[i].rectaSize(x, y) && drawio.shapes[i].constuctor.name == "Rectangle") {
+                drawio.moveingShape = drawio.shapes.splice(i, 1);
+                var calling = drawio.moveingShape[drawio.moveingShape.length -1];
+                drawio.isMoveing = true;
+                drawio.selectedElement = new Rectangle({ x: mouseEvent.offsetX , y: mouseEvent.offsetY }, calling.width, calling.height, drawio.colorPick, drawio.isMoveing);
+                }
+                else if(drawio.shapes[i].drawSize(x, y) && drawio.shapes[i].constuctor.name == "Draw" ) {
+                    console.log('is moveing');
+                    drawio.moveingShape = drawio.shapes.splice(i, 1);
+                    var calling = drawio.moveingShape[drawio.moveingShape.length -1];
+                    drawio.isMoveing = true;
+                    drawio.selectedElement = new Draw({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, calling.width, calling.height, drawio.widthPick, drawio.colorPick, drawio.isMoveing, calling.arrx);
+                }
+            }
+            break;
     }
     });
     
     $('#my-canvas').on('mousemove', function(mouseEvent) {
        if (drawio.selectedElement) {
-            console.log(drawio.selectedElement);
             drawio.ctx.clearRect(0, 0, drawio.canvas.width, drawio.canvas.height);
             drawio.selectedElement.resize(mouseEvent.offsetX, mouseEvent.offsetY);
             drawCanvas();
@@ -120,12 +140,11 @@ $(function () {
     });
 
     $('#my-canvas').on('mouseup', function(){
-        
         if(drawio.selectedElement) {
             drawio.isMoveing = false;
             drawio.shapes.push(drawio.selectedElement);
-            console.log(drawio.shapes);
             drawio.selectedElement = null;
+            console.log(drawio.shapes);
         }
     });
     $('#idTextBox').on('keyup', function(event){
