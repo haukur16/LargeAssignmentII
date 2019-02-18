@@ -59,6 +59,22 @@ Shape.prototype.circleSize = function(theX, theY) {
     }
 };
 
+Shape.prototype.textSize = function(theX, theY) {
+    if(this.constuctor.name == "Text") {
+        var startX = this.position.x;
+        console.log(startX);
+        var endX = this.position.x + (this.widthPick * this.textBox.length/2);
+        console.log(endX);
+        var startY = this.position.y - this.widthPick;
+        console.log(startY);
+        var endY= this.position.y;
+        console.log(endY);
+        if((startX <= theX) && (endX >= theX) && (startY <= theY) && (endY >= theY)) {
+            return (startX <= theX) && (endX >= theX) && (startY <= theY) && (endY >= theY);
+        }
+    }
+};
+
 function Rectangle(position, width, height, colorPick, isMoveing) {
     Shape.call(this, position);
     this.width = width;
@@ -91,12 +107,13 @@ function Draw(position, width, height, widthPick, colorPick, isMoveing, arrx) {
     this.height = height;
     this.arrx = arrx;
 };
-function Text(position, textBox, colorPick, fontFamilyPick, widthPick, width, height, isMoveing) {
+function Text(position, textBox, colorPick, fontFamilyPick, widthPick, isMoveing) {
     Shape.call(this, position);
-    this.textBox = textBox.value;
+    this.textBox = textBox;
     this.colorPick = colorPick.value;
     this.fontFamilyPick = fontFamilyPick;
     this.widthPick = widthPick.value;
+    this.isMoveing = isMoveing;
 }
 
 
@@ -199,7 +216,7 @@ Circle.prototype.resize = function (x, y) {
     if(this.isMoveing) {
         this.position.x = x;
         this.position.y = y;
-        this.width = this.width ;
+        this.width = this.width;
         this.height = this.height;
     }
     else{
@@ -210,7 +227,7 @@ Circle.prototype.resize = function (x, y) {
 Draw.prototype.resize = function (x, y) {
     if(this.isMoveing) {
         this.arrx = this.arrx;
-        this.width = this.width ;
+        this.width = this.width;
         this.height = this.height;
         this.position.x = x;
         this.position.y = y;
@@ -223,6 +240,14 @@ Draw.prototype.resize = function (x, y) {
     }
 };
 Text.prototype.resize = function (x, y) {
-    this.width = x - this.position.x;
-    this.height = y - this.position.y;
+    if(this.isMoveing) {
+        this.textBox = this.textBox;
+        this.position.x = x;
+        this.position.y = y;
+    }
+    else {
+        this.textBox = drawio.textBox.value;
+        this.width = x - this.position.x;
+        this.height = y - this.position.y;
+    }
 };
