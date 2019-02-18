@@ -47,6 +47,17 @@ Shape.prototype.drawSize = function(theX, theY) {
     }
     }
 };
+Shape.prototype.circleSize = function(theX, theY) {
+    if(this.constuctor.name == "Circle") {
+        var startX = this.position.x - this.width;
+        var endX = this.position.x + this.width;
+        var startY = this.position.y - this.height;
+        var endY= this.position.y + this.height;
+        if((startX <= theX) && (endX >= theX) && (startY <= theY) && (endY >= theY)) {
+            return (startX <= theX) && (endX >= theX) && (startY <= theY) && (endY >= theY);
+        }
+    }
+};
 
 function Rectangle(position, width, height, colorPick, isMoveing) {
     Shape.call(this, position);
@@ -63,10 +74,13 @@ function Line(position, width, height, widthPick, colorPick, isMoveing) {
     this.colorPick = colorPick.value;
     this.isMoveing = isMoveing;
 };
-function Circle(position, widthPick, colorPick) {
+function Circle(position, width, height, widthPick, colorPick, isMoveing) {
     Shape.call(this, position);
-    this.colorPick = colorPick.value;
+    this.width = width;
+    this.height = height;
     this.widthPick = widthPick.value;
+    this.colorPick = colorPick.value;
+    this.isMoveing = isMoveing;
 };
 function Draw(position, width, height, widthPick, colorPick, isMoveing, arrx) {
     Shape.call(this, position);
@@ -182,8 +196,16 @@ Line.prototype.resize = function (x, y) {
     this.height = y - this.position.y;
 };
 Circle.prototype.resize = function (x, y) {
-    this.width = x - this.position.x;
-    this.height = y - this.position.y;
+    if(this.isMoveing) {
+        this.position.x = x;
+        this.position.y = y;
+        this.width = this.width ;
+        this.height = this.height;
+    }
+    else{
+        this.width = x - this.position.x;
+        this.height = y - this.position.y;
+    }
 };
 Draw.prototype.resize = function (x, y) {
     if(this.isMoveing) {

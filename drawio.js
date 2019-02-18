@@ -125,6 +125,13 @@ $(function () {
                     drawio.isMoveing = true;
                     drawio.selectedElement = new Draw({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, calling.width, calling.height, drawio.widthPick, drawio.colorPick, drawio.isMoveing, calling.arrx);
                 }
+                else if(drawio.shapes[i].circleSize(x, y) && drawio.shapes[i].constuctor.name == "Circle" ) {
+                    console.log('is moveing');
+                    drawio.moveingShape = drawio.shapes.splice(i, 1);
+                    var calling = drawio.moveingShape[drawio.moveingShape.length -1];
+                    drawio.isMoveing = true;
+                    drawio.selectedElement = new Circle({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, calling.width, calling.height, drawio.widthPick, drawio.colorPick, drawio.isMoveing);
+                }
             }
             break;
     }
