@@ -1,13 +1,14 @@
 
 window.drawio = {
-    shapes: [],
-    removedShapes: [],
-    moveingShape: [],
-    arrx: [],
+    shapes: [], // Holds all elements on the canvas
+    removedShapes: [], // Undo button
+    moveingShape: [], // Holds the moveing element
+    arrx: [], // Holds drawing potitions
     selectedShape: 'draw',
     fontFamilyPick: 'Arial',
     canvas: document.getElementById('my-canvas'),
     ctx: document.getElementById('my-canvas').getContext('2d'),
+    paths: [], // Holds lines potitions
     colorPick: document.querySelector('.color-picker'),
     widthPick: document.querySelector('.width-picker'),
     textBox: document.getElementById('idTextBox'),
@@ -61,37 +62,12 @@ $(function () {
     $('select').on('change', function () {
         drawio.fontFamilyPick = this.value;
     })
-    /*$('#my-canvas').on('mousedown', function(mouseEvent) {
-        if(drawio.selectedShape == 'move') {
-            var x = mouseEvent.offsetX;
-            var y = mouseEvent.offsetY;
-            console.log(x);
-            console.log(y);
-            for(var i = 0; i<drawio.shapes.length; i++) {
-                if(drawio.shapes[i].rectaSize(x, y) && drawio.shapes[i].constuctor.name == "Rectangle") {
-                    console.log(drawio.shapes[i].constuctor.name);
-                    console.log(drawio.shapes[i].position.x);
-                    drawio.moveingShape = drawio.shapes.splice(i, 1);
-                    console.log(drawio.moveingShape);
-                    drawio.isMoveing = true;
-                    drawio.selectedElement = new Rectangle({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, drawio.moveingShape[drawio.moveingShape.length -1].width, drawio.moveingShape[drawio.moveingShape.length -1].height, drawio.colorPick, drawio.isMoveing);
-                }
-                else if(drawio.shapes[i].drawSize(x, y) && drawio.shapes[i].constuctor.name == "Draw" ) {
-                    console.log('hi');
-                    drawio.moveingShape = drawio.shapes.splice(i, 1);
-                    var calling = drawio.moveingShape[drawio.moveingShape.length -1];
-                    drawio.isMoveing = true;
-                    drawio.selectedElement = new Draw({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, calling.width, calling.height, drawio.widthPick, drawio.colorPick, drawio.isMoveing, calling.arrx);
-                }
-            }
-        }
-    })*/
 
 
     $('#my-canvas').on('mousedown', function(mouseEvent) {
         switch (drawio.selectedShape) {
             case drawio.availableShapes.RECTANGLE:
-            drawio.selectedElement = new Rectangle({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, 0, 0, drawio.colorPick);
+            drawio.selectedElement = new Rectangle({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, 0, 0, drawio.colorPick, drawio.widthPick, drawio.isMoveing);
             break;
             case drawio.availableShapes.LINE:
             drawio.selectedElement = new Line({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, 0, 0, drawio.widthPick ,drawio.colorPick, drawio.isMoveing);
@@ -114,33 +90,41 @@ $(function () {
                 var y = mouseEvent.offsetY;
                 console.log(x);
                 console.log(y);
-                if(drawio.shapes[i].rectaSize(x, y) && drawio.shapes[i].constuctor.name == "Rectangle") {
-                drawio.moveingShape = drawio.shapes.splice(i, 1);
-                var calling = drawio.moveingShape[drawio.moveingShape.length -1];
-                drawio.isMoveing = true;
-                drawio.selectedElement = new Rectangle({ x: mouseEvent.offsetX , y: mouseEvent.offsetY }, calling.width, calling.height, drawio.colorPick, drawio.isMoveing);
-                }
-                else if(drawio.shapes[i].drawSize(x, y) && drawio.shapes[i].constuctor.name == "Draw" ) {
-                    console.log('is moveing');
+                if(drawio.shapes[i].pointStroke(x, y) && drawio.shapes[i].constuctor.name == "Line") {
+                    console.log(drawio.shapes[i]);
+                    console.log('line is moveing');
                     drawio.moveingShape = drawio.shapes.splice(i, 1);
                     var calling = drawio.moveingShape[drawio.moveingShape.length -1];
+                    console.log(drawio.moveingShape);
                     drawio.isMoveing = true;
-                    drawio.selectedElement = new Draw({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, calling.width, calling.height, drawio.widthPick, drawio.colorPick, drawio.isMoveing, calling.arrx);
+                    drawio.selectedElement = new Line({ x: x, y: mouseEvent.offsetY }, calling.width, calling.height, drawio.widthPick ,drawio.colorPick, drawio.isMoveing);
+                    break;
                 }
-                else if(drawio.shapes[i].circleSize(x, y) && drawio.shapes[i].constuctor.name == "Circle" ) {
+                else if(drawio.shapes[i].pointStroke(x, y) && drawio.shapes[i].constuctor.name == "Circle" ) {
                     console.log('is moveing');
                     drawio.moveingShape = drawio.shapes.splice(i, 1);
                     var calling = drawio.moveingShape[drawio.moveingShape.length -1];
                     drawio.isMoveing = true;
                     drawio.selectedElement = new Circle({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, calling.width, calling.height, drawio.widthPick, drawio.colorPick, drawio.isMoveing);
                 }
-                else if(drawio.shapes[i].textSize(x, y) && drawio.shapes[i].constuctor.name == "Text" ) {
+                else if(drawio.shapes[i].pointStroke(x, y) && drawio.shapes[i].constuctor.name == "Draw" ) {
                     console.log('is moveing');
                     drawio.moveingShape = drawio.shapes.splice(i, 1);
                     var calling = drawio.moveingShape[drawio.moveingShape.length -1];
                     drawio.isMoveing = true;
-                    console.log(calling.textBox);
-                    drawio.selectedElement = new Text({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, calling.textBox, calling.colorPick, drawio.fontFamilyPick, drawio.widthPick, drawio.isMoveing);
+                    drawio.selectedElement = new Draw({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, calling.width, calling.height, drawio.widthPick, drawio.colorPick, drawio.isMoveing, calling.arrx);
+                }
+                else if(drawio.shapes[i].pointStroke(x, y) && drawio.shapes[i].constuctor.name == "Rectangle" ) {
+                    drawio.moveingShape = drawio.shapes.splice(i, 1);
+                    var calling = drawio.moveingShape[drawio.moveingShape.length -1];
+                    drawio.isMoveing = true;
+                    drawio.selectedElement = new Rectangle({ x: mouseEvent.offsetX , y: mouseEvent.offsetY }, calling.width, calling.height, drawio.colorPick, drawio.widthPick, drawio.isMoveing);
+                }
+                else if(drawio.shapes[i].textSize(x, y) && drawio.shapes[i].constuctor.name == "Text" ) {
+                    drawio.moveingShape = drawio.shapes.splice(i, 1);
+                    var calling = drawio.moveingShape[drawio.moveingShape.length -1];
+                    drawio.isMoveing = true;
+                    drawio.selectedElement = new Text({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, calling.textBox, drawio.colorPick, drawio.fontFamilyPick, drawio.widthPick, drawio.isMoveing);
                 }
             }
             break;
@@ -158,6 +142,8 @@ $(function () {
     $('#my-canvas').on('mouseup', function(){
         if(drawio.selectedElement) {
             drawio.isMoveing = false;
+            drawio.selectedElement.isMoveing = false;
+            console.log(drawio.isMoveing);
             drawio.shapes.push(drawio.selectedElement);
             drawio.selectedElement = null;
             console.log(drawio.shapes);
@@ -166,15 +152,20 @@ $(function () {
     $('#idTextBox').on('keyup', function(event){
         event.preventDefault();
         if (event.keyCode === 13) {
-            drawio.selectedElement.textBox = $(this).val();
-            drawio.ctx.clearRect(0, 0, drawio.canvas.width, drawio.canvas.height);
-            drawio.selectedElement.resize(event.offsetX, event.offsetY);
-            drawCanvas();
-            drawio.shapes.push(drawio.selectedElement);
-            drawio.selectedElement = null;
-            console.log(drawio.shapes);
-            $("#idTextBox").val('');
-	        $("#idTextBox").hide();
+            if($(this).val()) {
+                drawio.selectedElement.textBox = $(this).val();
+                drawio.ctx.clearRect(0, 0, drawio.canvas.width, drawio.canvas.height);
+                drawio.selectedElement.resize(event.offsetX, event.offsetY);
+                drawCanvas();
+                drawio.shapes.push(drawio.selectedElement);
+                drawio.selectedElement = null;
+                console.log(drawio.shapes);
+                $("#idTextBox").val('');
+	            $("#idTextBox").hide();
+            }
+            else {
+                $("#idTextBox").hide();
+            }
         }
     });
 
