@@ -118,7 +118,6 @@ Circle.prototype.render = function() {
     drawio.paths.push(this.pathLine);
 };
 Draw.prototype.render = function() {
-    alert("drawing");
     if(this.isMoveing){
         this.pathLine = new Path2D();
         var movedDraw = [];

@@ -14,7 +14,6 @@ window.drawio = {
     textBox: document.getElementById('idTextBox'),
     selectedElement: null,
     isMoveing: false,
-
     availableShapes: {
         RECTANGLE: 'rectangle',
         CIRCLE: 'circle',
@@ -195,19 +194,65 @@ $(function () {
       }
     }
 
+    const form = document.querySelector('form');
+    const selectCanvas = document.getElementsByClassName('select');
+    const option = document.querySelector('option');
+    const button = document.getElementById('clear');
+    const input = document.getElementById('item');
+    let itemsArray = localStorage.getItem('items') ? JSON.parse(localStorage.getItem('items')) : [];
+
+    localStorage.setItem('items', JSON.stringify(itemsArray));
+    const data = JSON.parse(localStorage.getItem('items'));
+
+    const liMaker = (text) => {
+      const option = document.createElement('option');
+      option.text = text;
+      option.value = text;
+      selectCanvas[0].appendChild(option);
+    }
     // This button is for saving the current canvas to the localstorage
     $('#save-canvas').on('click', function(e) {
-      alert("save");
-      localStorage.setItem('canvas', JSON.stringify(drawio.shapes));
+      for (i = 0; i < itemsArray.length; i++) {
+        if (itemsArray[i] === input.value) {
+          // Don't erase this alert!!
+          alert("")
+        }
+      }
+
+      if (input.value) {
+        itemsArray.push(input.value);
+        localStorage.setItem('items', JSON.stringify(itemsArray));
+        console.log(input.value)
+        localStorage.setItem(input.value, JSON.stringify(drawio.shapes));
+        liMaker(input.value);
+        input.value = "";
+      }
+      else {
+        // Don't erase this alert!!
+        alert("You must give the canvas a name before saving!");
+      }
     })
+
+    data.forEach(item => {
+      liMaker(item);
+    });
+
+    button.addEventListener('click', function () {
+      localStorage.clear();
+      console.log(selectCanvas[0].options);
+      selectCanvas[0].options.length = 0;
+
+      itemsArray = [];
+    });
 
     // This button is for getting the last saved canvas from the localstorage
     $('#retrieve-localstorage').on('click', function(e) {
       // Checks if there is something saved in the localstorage
-      if(localStorage.getItem('canvas')) {
-        alert("restore");
-        var items =  JSON.parse(localStorage.getItem('canvas'));
-
+      var selectedCanvas = $(".select :selected").text();
+      console.log(selectedCanvas);
+      if(localStorage.getItem(selectedCanvas)) {
+        var items =  JSON.parse(localStorage.getItem(selectedCanvas));
+        console.log(items);
         // converts the items to their previous shapes
         convertToShapes(items);
         drawCanvas();

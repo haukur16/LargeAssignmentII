@@ -130,7 +130,6 @@
                     </select>
                 </div>
             </div>
-
         </div>
         <div class="container">
             <canvas id="my-canvas" width="800" height="600">
@@ -138,9 +137,23 @@
             </canvas>
             <input type="text" id="idTextBox" name="text" hidden></input>
         </div>
-        <button type="button" name="button" id="save-canvas">Save canvas</button>
+
+        <button type="button" name="button" id="save-canvas">Save canvas to local storage</button>
         <button type="button" name="button" id="retrieve-localstorage">Retrieve local storage</button>
-        <button type="button" name="button" id="clear-localstorage">Clear local storage</button>
+        <div class="small-container">
+        <h1>Enter a name for your canvas:</h1>
+        <form>
+          <input id="item" type="text" placeholder="New">
+        </form>
+        <h3>When finished writing a name for your canvas, click save canvas to save it to local storage</h3>
+        <h2>Saved Canvases:</h2>
+        <select class="select" name="">
+
+        </select>
+        <h3>Select which canvas you want to retrieve, then click retrieve local storage button</h3>
+
+        <button id="clear">Clear all saved canvases</button>
+        </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js" charset="utf-8"></script>
         <script src="shapes.js" charset="utf-8"></script>
         <script src="drawio.js" charset="utf-8"></script>
