@@ -30,6 +30,7 @@ $(function () {
         if(drawio.selectedElement) {
             drawio.selectedElement.render();
         }
+
         for (var i = 0; i < drawio.shapes.length; i++) {
             drawio.shapes[i].render();
         }
@@ -67,20 +68,20 @@ $(function () {
     $('#my-canvas').on('mousedown', function(mouseEvent) {
         switch (drawio.selectedShape) {
             case drawio.availableShapes.RECTANGLE:
-            drawio.selectedElement = new Rectangle({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, 0, 0, drawio.colorPick, drawio.widthPick, drawio.isMoveing);
+            drawio.selectedElement = new Rectangle({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, 0, 0, drawio.colorPick, drawio.widthPick, drawio.isMoveing, "rectangle");
             break;
             case drawio.availableShapes.LINE:
-            drawio.selectedElement = new Line({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, 0, 0, drawio.widthPick ,drawio.colorPick, drawio.isMoveing);
+            drawio.selectedElement = new Line({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, 0, 0, drawio.widthPick ,drawio.colorPick, drawio.isMoveing, "line");
             break;
             case drawio.availableShapes.CIRCLE:
-            drawio.selectedElement = new Circle({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, 0, 0, drawio.widthPick, drawio.colorPick, drawio.isMoveing);
+            drawio.selectedElement = new Circle({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, 0, 0, drawio.widthPick, drawio.colorPick, drawio.isMoveing, "circle");
             break;
             case drawio.availableShapes.DRAW:
             drawio.arrx = [];
-            drawio.selectedElement = new Draw({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, 0, 0, drawio.widthPick, drawio.colorPick, drawio.isMoveing, drawio.arrx);
+            drawio.selectedElement = new Draw({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, 0, 0, drawio.widthPick, drawio.colorPick, drawio.isMoveing, drawio.arrx, "draw");
             break;
             case drawio.availableShapes.TEXT:
-            drawio.selectedElement = new Text({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, drawio.textBox, drawio.colorPick, drawio.fontFamilyPick, drawio.widthPick, drawio.isMoveing);
+            drawio.selectedElement = new Text({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, drawio.textBox, drawio.colorPick, drawio.fontFamilyPick, drawio.widthPick, drawio.isMoveing, "text");
             $(drawio.textBox).css({"top": mouseEvent.pageY, "left": mouseEvent.pageX});
 			$(drawio.textBox).show();
             break;
@@ -88,16 +89,12 @@ $(function () {
             for(var i = 0; i<drawio.shapes.length; i++) {
                 var x = mouseEvent.offsetX;
                 var y = mouseEvent.offsetY;
-                console.log(x);
-                console.log(y);
                 if(drawio.shapes[i].pointStroke(x, y) && drawio.shapes[i].constuctor.name == "Line") {
-                    console.log(drawio.shapes[i]);
-                    console.log('line is moveing');
                     drawio.moveingShape = drawio.shapes.splice(i, 1);
                     var calling = drawio.moveingShape[drawio.moveingShape.length -1];
                     console.log(drawio.moveingShape);
                     drawio.isMoveing = true;
-                    drawio.selectedElement = new Line({ x: x, y: mouseEvent.offsetY }, calling.width, calling.height, drawio.widthPick ,drawio.colorPick, drawio.isMoveing);
+                    drawio.selectedElement = new Line({ x: x, y: mouseEvent.offsetY }, calling.width, calling.height, drawio.widthPick ,drawio.colorPick, drawio.isMoveing, "line");
                     break;
                 }
                 else if(drawio.shapes[i].pointStroke(x, y) && drawio.shapes[i].constuctor.name == "Circle" ) {
@@ -105,34 +102,35 @@ $(function () {
                     drawio.moveingShape = drawio.shapes.splice(i, 1);
                     var calling = drawio.moveingShape[drawio.moveingShape.length -1];
                     drawio.isMoveing = true;
-                    drawio.selectedElement = new Circle({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, calling.width, calling.height, drawio.widthPick, drawio.colorPick, drawio.isMoveing);
+                    drawio.selectedElement = new Circle({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, calling.width, calling.height, drawio.widthPick, drawio.colorPick, drawio.isMoveing, "circle");
                 }
                 else if(drawio.shapes[i].pointStroke(x, y) && drawio.shapes[i].constuctor.name == "Draw" ) {
                     console.log('is moveing');
                     drawio.moveingShape = drawio.shapes.splice(i, 1);
                     var calling = drawio.moveingShape[drawio.moveingShape.length -1];
                     drawio.isMoveing = true;
-                    drawio.selectedElement = new Draw({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, calling.width, calling.height, drawio.widthPick, drawio.colorPick, drawio.isMoveing, calling.arrx);
+                    drawio.selectedElement = new Draw({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, calling.width, calling.height, drawio.widthPick, drawio.colorPick, drawio.isMoveing, calling.arrx, "draw");
                 }
                 else if(drawio.shapes[i].pointStroke(x, y) && drawio.shapes[i].constuctor.name == "Rectangle" ) {
                     drawio.moveingShape = drawio.shapes.splice(i, 1);
                     var calling = drawio.moveingShape[drawio.moveingShape.length -1];
                     drawio.isMoveing = true;
-                    drawio.selectedElement = new Rectangle({ x: mouseEvent.offsetX , y: mouseEvent.offsetY }, calling.width, calling.height, drawio.colorPick, drawio.widthPick, drawio.isMoveing);
+                    drawio.selectedElement = new Rectangle({ x: mouseEvent.offsetX , y: mouseEvent.offsetY }, calling.width, calling.height, drawio.colorPick, drawio.widthPick, drawio.isMoveing, "rectangle");
                 }
                 else if(drawio.shapes[i].textSize(x, y) && drawio.shapes[i].constuctor.name == "Text" ) {
                     drawio.moveingShape = drawio.shapes.splice(i, 1);
                     var calling = drawio.moveingShape[drawio.moveingShape.length -1];
                     drawio.isMoveing = true;
-                    drawio.selectedElement = new Text({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, calling.textBox, drawio.colorPick, drawio.fontFamilyPick, drawio.widthPick, drawio.isMoveing);
+                    drawio.selectedElement = new Text({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, calling.textBox, drawio.colorPick, drawio.fontFamilyPick, drawio.widthPick, drawio.isMoveing, "text");
                 }
             }
             break;
     }
     });
-    
+
     $('#my-canvas').on('mousemove', function(mouseEvent) {
        if (drawio.selectedElement) {
+            console.log(drawio.selectedElement);
             drawio.ctx.clearRect(0, 0, drawio.canvas.width, drawio.canvas.height);
             drawio.selectedElement.resize(mouseEvent.offsetX, mouseEvent.offsetY);
             drawCanvas();
@@ -169,6 +167,55 @@ $(function () {
         }
     });
 
+    // This is the funtion that will convert all the javascrip objects from the LocalStorage to their original shapes on the canvas
+    function convertToShapes(itemList) {
+      for (i = 0; i < itemList.length; i++) {
+        if(itemList[i].name === 'rectangle') {
+          drawio.shapes.push(new Rectangle({ x: itemList[i].position.x , y: itemList[i].position.y }, itemList[i].width, itemList[i].height, itemList[i].colorPick, drawio.widthPick, itemList[i].isMoveing, itemList[i].name))
+        }
+        else if(itemList[i].name === 'circle') {
+          drawio.shapes.push(new Circle({ x: itemList[i].position.x, y: itemList[i].position.y }, itemList[i].width, itemList[i].height, drawio.widthPick, drawio.colorPick, itemList[i].isMoveing, itemList[i].name))
+        }
+        else if(itemList[i].name === 'draw') {
+          var draw = new Draw({ x: itemList[i].position.x, y: itemList[i].position.y }, itemList[i].width, itemList[i].height, drawio.widthPick, drawio.colorPick, itemList[i].isMoveing, itemList[i].name);
+          draw.arrx = itemList[i].arrx;
+          draw.pathLine = itemList[i].pathLine;
+          drawio.shapes.push(draw);
+        }
+        else if(itemList[i].name === 'text') {
+          var theText = new Text({ x: itemList[i].position.x, y: itemList[i].position.y }, itemList[i].textBox, drawio.colorPick, drawio.fontFamilyPick, drawio.widthPick, itemList[i].isMoveing, itemList[i].name);
+          theText.pathLine = itemList[i].pathLine;
+          drawio.shapes.push(theText);
+        }
+        else if(itemList[i].name === 'line') {
+          var line = new Line({ x: itemList[i].position.x, y: itemList[i].position.y }, itemList[i].width, itemList[i].height, drawio.widthPick ,drawio.colorPick, itemList[i].isMoveing, itemList[i].name);
+          line.pathLine = itemList[i].pathLine;
+          drawio.shapes.push(line);
+        }
+      }
+    }
+
+    // This button is for saving the current canvas to the localstorage
+    $('#save-canvas').on('click', function(e) {
+      alert("save");
+      localStorage.setItem('canvas', JSON.stringify(drawio.shapes));
+    })
+
+    // This button is for getting the last saved canvas from the localstorage
+    $('#retrieve-localstorage').on('click', function(e) {
+      // Checks if there is something saved in the localstorage
+      if(localStorage.getItem('canvas')) {
+        alert("restore");
+        var items =  JSON.parse(localStorage.getItem('canvas'));
+
+        // converts the items to their previous shapes
+        convertToShapes(items);
+        drawCanvas();
+      }
+    })
+    $('#clear-localstorage').on('click', function(e) {
+      localStorage.clear();
+    })
 });
 
 var slider = document.getElementById("myRange");

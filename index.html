@@ -6,7 +6,7 @@
         <style media="screen">
             html, body { height: 100%; }
 
-            * { 
+            * {
                 box-sizing: border-box;
                 font-family: Cooper Black}
             body {
@@ -72,7 +72,7 @@
             #idTextBox {
             position:absolute;
             }
-            
+
         </style>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
 
@@ -97,10 +97,10 @@
             </div>
             <div class="icon" data-shape="text">
                 <i class="fa fa-font" area-hidden="true"></i>
-            </div> 
+            </div>
             <div class="icon" id="move" data-shape="move">
                 <i class="fa fa-arrows" area-hidden="true"></i>
-            </div>   
+            </div>
         </nav>
         <div class = "top-container">
             <div class ="picker">
@@ -138,7 +138,9 @@
             </canvas>
             <input type="text" id="idTextBox" name="text" hidden></input>
         </div>
-
+        <button type="button" name="button" id="save-canvas">Save canvas</button>
+        <button type="button" name="button" id="retrieve-localstorage">Retrieve local storage</button>
+        <button type="button" name="button" id="clear-localstorage">Clear local storage</button>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js" charset="utf-8"></script>
         <script src="shapes.js" charset="utf-8"></script>
         <script src="drawio.js" charset="utf-8"></script>

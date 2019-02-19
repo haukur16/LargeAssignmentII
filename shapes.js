@@ -1,5 +1,6 @@
-function Shape(position) {
+function Shape(position, name) {
     this.position = position;
+    this.name = name;
 };
 
 Shape.prototype.render = function() {};
@@ -7,10 +8,6 @@ Shape.prototype.move = function (position) {
     this.position = position;
 };
 Shape.prototype.resize = function() {};
-
-
-
-
 
 Shape.prototype.pointStroke = function(theX, theY) {
     console.log(drawio.ctx.isPointInStroke(this.pathLine, theX, theY));
@@ -28,8 +25,8 @@ Shape.prototype.textSize = function(theX, theY) {
     }
 };
 
-function Rectangle(position, width, height, colorPick, widthPick, isMoveing) {
-    Shape.call(this, position);
+function Rectangle(position, width, height, colorPick, widthPick, isMoveing, name) {
+    Shape.call(this, position, name);
     this.width = width;
     this.height = height;
     this.colorPick = colorPick.value;
@@ -37,8 +34,8 @@ function Rectangle(position, width, height, colorPick, widthPick, isMoveing) {
     this.isMoveing = isMoveing;
     this.pathLine;
 };
-function Line(position, width, height, widthPick, colorPick, isMoveing) {
-    Shape.call(this, position);
+function Line(position, width, height, widthPick, colorPick, isMoveing, name) {
+    Shape.call(this, position, name);
     this.width = width;
     this.height = height;
     this.widthPick = widthPick.value;
@@ -46,8 +43,8 @@ function Line(position, width, height, widthPick, colorPick, isMoveing) {
     this.isMoveing = isMoveing;
     this.pathLine;
 };
-function Circle(position, width, height, widthPick, colorPick, isMoveing) {
-    Shape.call(this, position);
+function Circle(position, width, height, widthPick, colorPick, isMoveing, name) {
+    Shape.call(this, position, name);
     this.width = width;
     this.height = height;
     this.widthPick = widthPick.value;
@@ -55,8 +52,8 @@ function Circle(position, width, height, widthPick, colorPick, isMoveing) {
     this.isMoveing = isMoveing;
     this.pathLine;
 };
-function Draw(position, width, height, widthPick, colorPick, isMoveing, arrx) {
-    Shape.call(this, position);
+function Draw(position, width, height, widthPick, colorPick, isMoveing, arrx, name) {
+    Shape.call(this, position, name);
     this.colorPick = colorPick.value;
     this.widthPick = widthPick.value;
     this.isMoveing = isMoveing;
@@ -65,8 +62,8 @@ function Draw(position, width, height, widthPick, colorPick, isMoveing, arrx) {
     this.arrx = arrx;
     this.pathLine;
 };
-function Text(position, textBox, colorPick, fontFamilyPick, widthPick, isMoveing) {
-    Shape.call(this, position);
+function Text(position, textBox, colorPick, fontFamilyPick, widthPick, isMoveing, name) {
+    Shape.call(this, position, name);
     this.textBox = textBox;
     this.colorPick = colorPick.value;
     this.fontFamilyPick = fontFamilyPick;
@@ -121,6 +118,7 @@ Circle.prototype.render = function() {
     drawio.paths.push(this.pathLine);
 };
 Draw.prototype.render = function() {
+    alert("drawing");
     if(this.isMoveing){
         this.pathLine = new Path2D();
         var movedDraw = [];
@@ -214,7 +212,7 @@ Draw.prototype.resize = function (x, y) {
         this.height = this.height;
         this.position.x = x;
         this.position.y = y;
-        
+
     }
     else {
         this.width = x - this.position.x;
