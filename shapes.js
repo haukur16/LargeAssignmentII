@@ -29,8 +29,8 @@ function Rectangle(position, width, height, colorPick, widthPick, isMoveing, nam
     Shape.call(this, position, name);
     this.width = width;
     this.height = height;
-    this.colorPick = colorPick.value;
-    this.widthPick = widthPick.value;
+    this.colorPick = colorPick;
+    this.widthPick = widthPick;
     this.isMoveing = isMoveing;
     this.pathLine;
 };
@@ -38,8 +38,8 @@ function Line(position, width, height, widthPick, colorPick, isMoveing, name) {
     Shape.call(this, position, name);
     this.width = width;
     this.height = height;
-    this.widthPick = widthPick.value;
-    this.colorPick = colorPick.value;
+    this.widthPick = widthPick;
+    this.colorPick = colorPick;
     this.isMoveing = isMoveing;
     this.pathLine;
 };
@@ -47,15 +47,15 @@ function Circle(position, width, height, widthPick, colorPick, isMoveing, name) 
     Shape.call(this, position, name);
     this.width = width;
     this.height = height;
-    this.widthPick = widthPick.value;
-    this.colorPick = colorPick.value;
+    this.widthPick = widthPick;
+    this.colorPick = colorPick;
     this.isMoveing = isMoveing;
     this.pathLine;
 };
 function Draw(position, width, height, widthPick, colorPick, isMoveing, arrx, name) {
     Shape.call(this, position, name);
-    this.colorPick = colorPick.value;
-    this.widthPick = widthPick.value;
+    this.colorPick = colorPick;
+    this.widthPick = widthPick;
     this.isMoveing = isMoveing;
     this.width = width;
     this.height = height;
@@ -65,14 +65,12 @@ function Draw(position, width, height, widthPick, colorPick, isMoveing, arrx, na
 function Text(position, textBox, colorPick, fontFamilyPick, widthPick, isMoveing, name) {
     Shape.call(this, position, name);
     this.textBox = textBox;
-    this.colorPick = colorPick.value;
+    this.colorPick = colorPick;
     this.fontFamilyPick = fontFamilyPick;
-    this.widthPick = widthPick.value;
+    this.widthPick = widthPick;
     this.isMoveing = isMoveing;
     this.pathLine;
 }
-
-
 
 
 Rectangle.prototype = Object.create(Shape.prototype);
@@ -91,7 +89,7 @@ Text.prototype.constuctor = Text;
 
 Rectangle.prototype.render = function() {
     this.pathLine = new Path2D;
-    drawio.ctx.fillStyle = this.colorPick;
+    drawio.ctx.strokeStyle = this.colorPick;
     drawio.ctx.lineWidth = this.widthPick;
     this.pathLine.rect(this.position.x, this.position.y, this.width, this.height);
     drawio.ctx.stroke(this.pathLine);
@@ -176,6 +174,8 @@ Rectangle.prototype.resize = function (x, y) {
     else {
         this.width = x - this.position.x;
         this.height = y - this.position.y;
+        this.widthPick = drawio.widthPick.value; // widthpick dosent change on move
+        this.colorPick = drawio.colorPick.value; // colorpick dosent change on move
     }
 
 };
@@ -190,6 +190,8 @@ Line.prototype.resize = function (x, y) {
     else {
         this.width = x - this.position.x;
         this.height = y - this.position.y;
+        this.widthPick = drawio.widthPick.value; // widthpick dosent change on move
+        this.colorPick = drawio.colorPick.value; // colorpick dosent change on move
     }
 };
 Circle.prototype.resize = function (x, y) {
@@ -202,6 +204,8 @@ Circle.prototype.resize = function (x, y) {
     else{
         this.width = x - this.position.x;
         this.height = y - this.position.y;
+        this.widthPick = drawio.widthPick.value; // widthpick dosent change on move
+        this.colorPick = drawio.colorPick.value; // colorpick dosent change on move
     }
 };
 Draw.prototype.resize = function (x, y) {
@@ -217,6 +221,8 @@ Draw.prototype.resize = function (x, y) {
         this.width = x - this.position.x;
         this.height = y - this.position.y;
         this.arrx.push({x: x , y: y});
+        this.widthPick = drawio.widthPick.value; // widthpick dosent change on move
+        this.colorPick = drawio.colorPick.value; // colorpick dosent change on move
     }
 };
 Text.prototype.resize = function (x, y) {
@@ -229,5 +235,7 @@ Text.prototype.resize = function (x, y) {
         this.textBox = drawio.textBox.value;
         this.width = x - this.position.x;
         this.height = y - this.position.y;
+        this.widthPick = drawio.widthPick.value; // widthpick dosent change on move
+        this.colorPick = drawio.colorPick.value; // colorpick dosent change on move
     }
 };

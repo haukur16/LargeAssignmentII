@@ -93,7 +93,7 @@ $(function () {
                     var calling = drawio.moveingShape[drawio.moveingShape.length -1];
                     console.log(drawio.moveingShape);
                     drawio.isMoveing = true;
-                    drawio.selectedElement = new Line({ x: x, y: mouseEvent.offsetY }, calling.width, calling.height, drawio.widthPick ,drawio.colorPick, drawio.isMoveing, "line");
+                    drawio.selectedElement = new Line({ x: x, y: mouseEvent.offsetY }, calling.width, calling.height, calling.widthPick ,calling.colorPick, drawio.isMoveing, "line");
                     break;
                 }
                 else if(drawio.shapes[i].pointStroke(x, y) && drawio.shapes[i].constuctor.name == "Circle" ) {
@@ -101,26 +101,26 @@ $(function () {
                     drawio.moveingShape = drawio.shapes.splice(i, 1);
                     var calling = drawio.moveingShape[drawio.moveingShape.length -1];
                     drawio.isMoveing = true;
-                    drawio.selectedElement = new Circle({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, calling.width, calling.height, drawio.widthPick, drawio.colorPick, drawio.isMoveing, "circle");
+                    drawio.selectedElement = new Circle({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, calling.width, calling.height, calling.widthPick, calling.colorPick, drawio.isMoveing, "circle");
                 }
                 else if(drawio.shapes[i].pointStroke(x, y) && drawio.shapes[i].constuctor.name == "Draw" ) {
                     console.log('is moveing');
                     drawio.moveingShape = drawio.shapes.splice(i, 1);
                     var calling = drawio.moveingShape[drawio.moveingShape.length -1];
                     drawio.isMoveing = true;
-                    drawio.selectedElement = new Draw({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, calling.width, calling.height, drawio.widthPick, drawio.colorPick, drawio.isMoveing, calling.arrx, "draw");
+                    drawio.selectedElement = new Draw({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, calling.width, calling.height, calling.widthPick, calling.colorPick, drawio.isMoveing, calling.arrx, "draw");
                 }
                 else if(drawio.shapes[i].pointStroke(x, y) && drawio.shapes[i].constuctor.name == "Rectangle" ) {
                     drawio.moveingShape = drawio.shapes.splice(i, 1);
                     var calling = drawio.moveingShape[drawio.moveingShape.length -1];
                     drawio.isMoveing = true;
-                    drawio.selectedElement = new Rectangle({ x: mouseEvent.offsetX , y: mouseEvent.offsetY }, calling.width, calling.height, drawio.colorPick, drawio.widthPick, drawio.isMoveing, "rectangle");
+                    drawio.selectedElement = new Rectangle({ x: mouseEvent.offsetX , y: mouseEvent.offsetY }, calling.width, calling.height, calling.colorPick, calling.widthPick, drawio.isMoveing, "rectangle");
                 }
                 else if(drawio.shapes[i].textSize(x, y) && drawio.shapes[i].constuctor.name == "Text" ) {
                     drawio.moveingShape = drawio.shapes.splice(i, 1);
                     var calling = drawio.moveingShape[drawio.moveingShape.length -1];
                     drawio.isMoveing = true;
-                    drawio.selectedElement = new Text({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, calling.textBox, drawio.colorPick, drawio.fontFamilyPick, drawio.widthPick, drawio.isMoveing, "text");
+                    drawio.selectedElement = new Text({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, calling.textBox, calling.colorPick, calling.fontFamilyPick, calling.widthPick, drawio.isMoveing, "text");
                 }
             }
             break;
@@ -170,24 +170,24 @@ $(function () {
     function convertToShapes(itemList) {
       for (i = 0; i < itemList.length; i++) {
         if(itemList[i].name === 'rectangle') {
-          drawio.shapes.push(new Rectangle({ x: itemList[i].position.x , y: itemList[i].position.y }, itemList[i].width, itemList[i].height, itemList[i].colorPick, drawio.widthPick, itemList[i].isMoveing, itemList[i].name))
+          drawio.shapes.push(new Rectangle({ x: itemList[i].position.x , y: itemList[i].position.y }, itemList[i].width, itemList[i].height, itemList[i].colorPick, itemList[i].widthPick, itemList[i].isMoveing, itemList[i].name))
         }
         else if(itemList[i].name === 'circle') {
-          drawio.shapes.push(new Circle({ x: itemList[i].position.x, y: itemList[i].position.y }, itemList[i].width, itemList[i].height, drawio.widthPick, drawio.colorPick, itemList[i].isMoveing, itemList[i].name))
+          drawio.shapes.push(new Circle({ x: itemList[i].position.x, y: itemList[i].position.y }, itemList[i].width, itemList[i].height, itemList[i].widthPick, itemList[i].colorPick, itemList[i].isMoveing, itemList[i].name))
         }
         else if(itemList[i].name === 'draw') {
-          var draw = new Draw({ x: itemList[i].position.x, y: itemList[i].position.y }, itemList[i].width, itemList[i].height, drawio.widthPick, drawio.colorPick, itemList[i].isMoveing, itemList[i].name);
+          var draw = new Draw({ x: itemList[i].position.x, y: itemList[i].position.y }, itemList[i].width, itemList[i].height, itemList[i].widthPick, itemList[i].colorPick, itemList[i].isMoveing, itemList[i].name);
           draw.arrx = itemList[i].arrx;
           draw.pathLine = itemList[i].pathLine;
           drawio.shapes.push(draw);
         }
         else if(itemList[i].name === 'text') {
-          var theText = new Text({ x: itemList[i].position.x, y: itemList[i].position.y }, itemList[i].textBox, drawio.colorPick, drawio.fontFamilyPick, drawio.widthPick, itemList[i].isMoveing, itemList[i].name);
+          var theText = new Text({ x: itemList[i].position.x, y: itemList[i].position.y }, itemList[i].textBox, itemList[i].colorPick, itemList[i].fontFamilyPick, itemList[i].widthPick, itemList[i].isMoveing, itemList[i].name);
           theText.pathLine = itemList[i].pathLine;
           drawio.shapes.push(theText);
         }
         else if(itemList[i].name === 'line') {
-          var line = new Line({ x: itemList[i].position.x, y: itemList[i].position.y }, itemList[i].width, itemList[i].height, drawio.widthPick ,drawio.colorPick, itemList[i].isMoveing, itemList[i].name);
+          var line = new Line({ x: itemList[i].position.x, y: itemList[i].position.y }, itemList[i].width, itemList[i].height, itemList[i].widthPick ,itemList[i].colorPick, itemList[i].isMoveing, itemList[i].name);
           line.pathLine = itemList[i].pathLine;
           drawio.shapes.push(line);
         }
