@@ -1,0 +1,68 @@
+html, body { height: 100%; }
+
+            * {
+                box-sizing: border-box;
+                font-family: Cooper Black}
+            body {
+                padding: 0;
+                margin: 0;
+                background-color: #FFE4DE;
+            }
+            .container {
+                padding: 20px;
+            }
+            #my-canvas {
+                background-color: rgba(155, 155, 155, 0.2);
+                box-shadow: 1px 1px 1px;
+                margin: 0 auto;
+                display: block;
+            }
+            .icon {
+                position: relative;
+                display: inline-block;
+                font-size: 4em;
+                float: right;
+                width: 100px;
+                top: 15px;
+                transition: color .5s;
+
+            }
+            .top-container {
+                height: 50px;
+                width: 100%;
+            }
+            .picker {
+                position: relative;
+                display: inline-block;
+                height: 100%;
+            }
+
+            .icon:hover {
+                color: orange;
+                cursor: pointer;
+            }
+            .icon.selected {
+                color:yellow;
+            }
+            .navbar {
+                height: 100px;
+                background-color: #C70039;
+                border-bottom: solid 6px #900C3F;
+            }
+            .header {
+                display: inline-flex;
+                color: yellow;
+                font-size: 30px;
+                margin-left: 50px;
+            }
+            #pencil-pic {
+                width: 90px;
+                height: 100px;
+            }
+            .undo:hover {
+                color: red;
+                cursor: pointer;
+            }
+            #idTextBox {
+            position:absolute;
+            }
