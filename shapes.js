@@ -13,25 +13,30 @@ Shape.prototype.pointStroke = function(theX, theY) {
     console.log(drawio.ctx.isPointInStroke(this.pathLine, theX, theY));
     return drawio.ctx.isPointInStroke(this.pathLine, theX, theY);
 };
+Shape.prototype.pointPath = function(theX, theY) {
+    console.log(drawio.ctx.isPointInPath(this.pathLine, theX, theY));
+    return drawio.ctx.isPointInPath(this.pathLine, theX, theY);
+};
 Shape.prototype.textSize = function(theX, theY) {
     if(this.constuctor.name == "Text") {
         var startX = this.position.x;
-        var endX = this.position.x + (this.widthPick * this.textBox.length/2);
+        var endX = this.position.x + drawio.ctx.measureText(this.textBox).width;
         var startY = this.position.y - this.widthPick;
-        var endY= this.position.y;
+        var endY = this.position.y;
         if((startX <= theX) && (endX >= theX) && (startY <= theY) && (endY >= theY)) {
             return (startX <= theX) && (endX >= theX) && (startY <= theY) && (endY >= theY);
         }
     }
 };
 
-function Rectangle(position, width, height, colorPick, widthPick, isMoveing, name) {
+function Rectangle(position, width, height, colorPick, widthPick, isMoveing, isFilled, name) {
     Shape.call(this, position, name);
     this.width = width;
     this.height = height;
     this.colorPick = colorPick;
     this.widthPick = widthPick;
     this.isMoveing = isMoveing;
+    this.isFilled = isFilled;
     this.pathLine;
 };
 function Line(position, width, height, widthPick, colorPick, isMoveing, name) {
@@ -43,13 +48,14 @@ function Line(position, width, height, widthPick, colorPick, isMoveing, name) {
     this.isMoveing = isMoveing;
     this.pathLine;
 };
-function Circle(position, width, height, widthPick, colorPick, isMoveing, name) {
+function Circle(position, width, height, widthPick, colorPick, isMoveing, isFilled, name) {
     Shape.call(this, position, name);
     this.width = width;
     this.height = height;
     this.widthPick = widthPick;
     this.colorPick = colorPick;
     this.isMoveing = isMoveing;
+    this.isFilled = isFilled;
     this.pathLine;
 };
 function Draw(position, width, height, widthPick, colorPick, isMoveing, arrx, name) {
@@ -88,12 +94,22 @@ Text.prototype.constuctor = Text;
 
 
 Rectangle.prototype.render = function() {
-    this.pathLine = new Path2D;
-    drawio.ctx.strokeStyle = this.colorPick;
-    drawio.ctx.lineWidth = this.widthPick;
-    this.pathLine.rect(this.position.x, this.position.y, this.width, this.height);
-    drawio.ctx.stroke(this.pathLine);
-    drawio.paths.push(this.pathLine);
+    if(this.isFilled){
+        this.pathLine = new Path2D;
+        drawio.ctx.fillStyle = this.colorPick;
+        //drawio.ctx.lineWidth = this.widthPick;
+        this.pathLine.rect(this.position.x, this.position.y, this.width, this.height);
+        drawio.ctx.fill(this.pathLine);
+        drawio.paths.push(this.pathLine);
+    }
+    else {
+        this.pathLine = new Path2D;
+        drawio.ctx.strokeStyle = this.colorPick;
+        drawio.ctx.lineWidth = this.widthPick;
+        this.pathLine.rect(this.position.x, this.position.y, this.width, this.height);
+        drawio.ctx.stroke(this.pathLine);
+        drawio.paths.push(this.pathLine);
+    }
 };
 Line.prototype.render = function() {
     this.pathLine = new Path2D();
@@ -107,13 +123,24 @@ Line.prototype.render = function() {
     drawio.paths.push(this.pathLine);
 };
 Circle.prototype.render = function() {
-    this.pathLine = new Path2D();
-    drawio.ctx.beginPath();
-    drawio.ctx.strokeStyle = this.colorPick;
-    drawio.ctx.lineWidth = this.widthPick;
-    this.pathLine.arc(this.position.x, this.position.y, Math.abs(this.width) , 0, 2 * Math.PI);
-    drawio.ctx.stroke(this.pathLine);
-    drawio.paths.push(this.pathLine);
+    if(this.isFilled) {
+        this.pathLine = new Path2D();
+        drawio.ctx.beginPath();
+        drawio.ctx.fillStyle = this.colorPick;
+        drawio.ctx.lineWidth = this.widthPick;
+        this.pathLine.arc(this.position.x, this.position.y, Math.abs(this.width) , 0, 2 * Math.PI);
+        drawio.ctx.fill(this.pathLine);
+        drawio.paths.push(this.pathLine);
+    }
+    else{
+        this.pathLine = new Path2D();
+        drawio.ctx.beginPath();
+        drawio.ctx.strokeStyle = this.colorPick;
+        drawio.ctx.lineWidth = this.widthPick;
+        this.pathLine.arc(this.position.x, this.position.y, Math.abs(this.width) , 0, 2 * Math.PI);
+        drawio.ctx.stroke(this.pathLine);
+        drawio.paths.push(this.pathLine);
+    }
 };
 Draw.prototype.render = function() {
     if(this.isMoveing){

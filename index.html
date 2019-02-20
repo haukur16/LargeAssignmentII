@@ -33,6 +33,18 @@
                 transition: color .5s;
 
             }
+            .fill {
+                position: relative;
+                padding-left:20px;
+                margin-right: 50px;
+                border: solid 6px black;
+                display: inline-block;
+                font-size: 5em;
+                float: right;
+                width: 100px;
+                height: 100%;
+                transition: color .5s;
+            }
             .top-container {
                 height: 50px;
                 width: 100%;
@@ -46,6 +58,12 @@
             .icon:hover {
                 color: orange;
                 cursor: pointer;
+            }
+            .fill:hover {
+                color:yellow;
+            }
+            .fill.filled {
+                color:yellow;
             }
             .icon.selected {
                 color:yellow;
@@ -100,6 +118,9 @@
             </div>
             <div class="icon" id="move" data-shape="move">
                 <i class="fa fa-arrows" area-hidden="true"></i>
+            </div>
+            <div class="fill filled" data-shape="fill">
+                <i class="fa fa-tint" area-hidden="true"></i><br>
             </div>
         </nav>
         <div class = "top-container">
