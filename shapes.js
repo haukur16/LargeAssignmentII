@@ -10,11 +10,9 @@ Shape.prototype.move = function (position) {
 Shape.prototype.resize = function() {};
 
 Shape.prototype.pointStroke = function(theX, theY) {
-    console.log(drawio.ctx.isPointInStroke(this.pathLine, theX, theY));
     return drawio.ctx.isPointInStroke(this.pathLine, theX, theY);
 };
 Shape.prototype.pointPath = function(theX, theY) {
-    console.log(drawio.ctx.isPointInPath(this.pathLine, theX, theY));
     return drawio.ctx.isPointInPath(this.pathLine, theX, theY);
 };
 Shape.prototype.textSize = function(theX, theY) {
@@ -92,7 +90,7 @@ Circle.prototype.constuctor = Circle;
 Draw.prototype.constuctor = Draw;
 Text.prototype.constuctor = Text;
 
-
+// All the render functions make sure that the objects get drawn
 Rectangle.prototype.render = function() {
     if(this.isFilled){
         this.pathLine = new Path2D;
@@ -189,7 +187,7 @@ Text.prototype.render = function() {
 
 
 
-
+// All the resize functions make sure that the objects being drawn get their appropriate attributes
 Rectangle.prototype.resize = function (x, y) {
     if(this.isMoveing) {
         this.position.x = x;

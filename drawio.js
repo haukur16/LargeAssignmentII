@@ -26,6 +26,8 @@ window.drawio = {
 };
 
 $(function () {
+
+    // this function draws the canvas..
     function drawCanvas() {
         if(drawio.selectedElement) {
             drawio.selectedElement.render();
@@ -36,13 +38,14 @@ $(function () {
         }
     }
 
-
+    // This function changes which shape will be drawn next
     $('.icon').on('click', function() {
         $('.icon').removeClass('selected');
         $(this).addClass('selected');
         drawio.selectedShape = $(this).data('shape');
     });
 
+    // This function changes whether the user wants to draw stroked or filled objects
     $('.fill').on('click', function() {
         if(document.querySelector('.filled')){
             $('.fill').removeClass('filled');
@@ -54,6 +57,7 @@ $(function () {
         }
     });
 
+    // This function undoes the last drawn object
     $('#undo').on('click', function() {
         if (drawio.shapes.length > 0) {
             let undo = drawio.shapes.pop();
@@ -62,6 +66,8 @@ $(function () {
             drawCanvas();
         }
     });
+
+    // This function redoes the last undone object
     $('#redo').on('click', function() {
         if (drawio.removedShapes.length > 0) {
             let redo = drawio.removedShapes.pop();
@@ -71,11 +77,13 @@ $(function () {
         }
     });
 
+    // This function changes the font-family picked
     $('select').on('change', function () {
         drawio.fontFamilyPick = this.value;
     })
 
-
+    // This function handles mousedown event. When the mouse button is down on the canvas, it creates a New
+    // object according to which object is selected. It also creates a new object when a previous one is moved
     $('#my-canvas').on('mousedown', function(mouseEvent) {
         switch (drawio.selectedShape) {
             case drawio.availableShapes.RECTANGLE:
@@ -94,7 +102,7 @@ $(function () {
             case drawio.availableShapes.TEXT:
             drawio.selectedElement = new Text({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, drawio.textBox, drawio.colorPick, drawio.fontFamilyPick, drawio.widthPick, drawio.isMoveing, "text");
             $(drawio.textBox).css({"top": mouseEvent.pageY, "left": mouseEvent.pageX});
-			$(drawio.textBox).show();
+			      $(drawio.textBox).show();
             break;
             case drawio.availableShapes.MOVE:
             for(var i = 0; i<drawio.shapes.length; i++) {
@@ -103,27 +111,23 @@ $(function () {
                 if(drawio.shapes[i].pointStroke(x, y) && drawio.shapes[i].constuctor.name == "Line") {
                     drawio.moveingShape = drawio.shapes.splice(i, 1);
                     var calling = drawio.moveingShape[drawio.moveingShape.length -1];
-                    console.log(drawio.moveingShape);
                     drawio.isMoveing = true;
                     drawio.selectedElement = new Line({ x: x, y: mouseEvent.offsetY }, calling.width, calling.height, calling.widthPick ,calling.colorPick, drawio.isMoveing, "line");
                     break;
                 }
                 else if(drawio.shapes[i].pointStroke(x, y) && drawio.shapes[i].constuctor.name == "Circle" || drawio.shapes[i].pointPath(x, y) && drawio.shapes[i].constuctor.name == "Circle") {
-                    console.log('is moveing');
                     drawio.moveingShape = drawio.shapes.splice(i, 1);
                     var calling = drawio.moveingShape[drawio.moveingShape.length -1];
                     drawio.isMoveing = true;
                     drawio.selectedElement = new Circle({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, calling.width, calling.height, calling.widthPick, calling.colorPick, drawio.isMoveing, calling.isFilled, "circle");
                 }
                 else if(drawio.shapes[i].pointStroke(x, y) && drawio.shapes[i].constuctor.name == "Draw" ) {
-                    console.log('is moveing');
                     drawio.moveingShape = drawio.shapes.splice(i, 1);
                     var calling = drawio.moveingShape[drawio.moveingShape.length -1];
                     drawio.isMoveing = true;
                     drawio.selectedElement = new Draw({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, calling.width, calling.height, calling.widthPick, calling.colorPick, drawio.isMoveing, calling.arrx, "draw");
                 }
                 else if(drawio.shapes[i].pointStroke(x, y) && drawio.shapes[i].constuctor.name == "Rectangle" || drawio.shapes[i].pointPath(x, y) && drawio.shapes[i].constuctor.name == "Rectangle") {
-                    console.log('hi');
                     drawio.moveingShape = drawio.shapes.splice(i, 1);
                     var calling = drawio.moveingShape[drawio.moveingShape.length -1];
                     drawio.isMoveing = true;
@@ -137,28 +141,29 @@ $(function () {
                 }
             }
             break;
-    }
+        }
     });
 
+    // This function will resize the object when mouse is moved and calls the drawing function
     $('#my-canvas').on('mousemove', function(mouseEvent) {
-       if (drawio.selectedElement) {
-            console.log(drawio.selectedElement);
+        if (drawio.selectedElement) {
             drawio.ctx.clearRect(0, 0, drawio.canvas.width, drawio.canvas.height);
             drawio.selectedElement.resize(mouseEvent.offsetX, mouseEvent.offsetY);
             drawCanvas();
-    }
+        }
     });
 
+    // On mouseup this function will push the object to the shapes array
     $('#my-canvas').on('mouseup', function(){
         if(drawio.selectedElement) {
             drawio.isMoveing = false;
             drawio.selectedElement.isMoveing = false;
-            console.log(drawio.isMoveing);
             drawio.shapes.push(drawio.selectedElement);
             drawio.selectedElement = null;
-            console.log(drawio.shapes);
         }
     });
+
+    // This function will make sure that the text will be drawn when the user presses enter
     $('#idTextBox').on('keyup', function(event){
         event.preventDefault();
         if (event.keyCode === 13) {
@@ -169,7 +174,6 @@ $(function () {
                 drawCanvas();
                 drawio.shapes.push(drawio.selectedElement);
                 drawio.selectedElement = null;
-                console.log(drawio.shapes);
                 $("#idTextBox").val('');
 	            $("#idTextBox").hide();
             }
@@ -181,30 +185,30 @@ $(function () {
 
     // This is the funtion that will convert all the javascrip objects from the LocalStorage to their original shapes on the canvas
     function convertToShapes(itemList) {
-      for (i = 0; i < itemList.length; i++) {
-        if(itemList[i].name === 'rectangle') {
-          drawio.shapes.push(new Rectangle({ x: itemList[i].position.x , y: itemList[i].position.y }, itemList[i].width, itemList[i].height, itemList[i].colorPick, itemList[i].widthPick, itemList[i].isMoveing, itemList[i].isFilled, itemList[i].name))
+        for (i = 0; i < itemList.length; i++) {
+          if(itemList[i].name === 'rectangle') {
+            drawio.shapes.push(new Rectangle({ x: itemList[i].position.x , y: itemList[i].position.y }, itemList[i].width, itemList[i].height, itemList[i].colorPick, itemList[i].widthPick, itemList[i].isMoveing, itemList[i].isFilled, itemList[i].name))
+          }
+          else if(itemList[i].name === 'circle') {
+            drawio.shapes.push(new Circle({ x: itemList[i].position.x, y: itemList[i].position.y }, itemList[i].width, itemList[i].height, itemList[i].widthPick, itemList[i].colorPick, itemList[i].isMoveing, itemList[i].isFilled, itemList[i].name))
+          }
+          else if(itemList[i].name === 'draw') {
+            var draw = new Draw({ x: itemList[i].position.x, y: itemList[i].position.y }, itemList[i].width, itemList[i].height, itemList[i].widthPick, itemList[i].colorPick, itemList[i].isMoveing, itemList[i].name);
+            draw.arrx = itemList[i].arrx;
+            draw.pathLine = itemList[i].pathLine;
+            drawio.shapes.push(draw);
+          }
+          else if(itemList[i].name === 'text') {
+            var theText = new Text({ x: itemList[i].position.x, y: itemList[i].position.y }, itemList[i].textBox, itemList[i].colorPick, itemList[i].fontFamilyPick, itemList[i].widthPick, itemList[i].isMoveing, itemList[i].name);
+            theText.pathLine = itemList[i].pathLine;
+            drawio.shapes.push(theText);
+          }
+          else if(itemList[i].name === 'line') {
+            var line = new Line({ x: itemList[i].position.x, y: itemList[i].position.y }, itemList[i].width, itemList[i].height, itemList[i].widthPick ,itemList[i].colorPick, itemList[i].isMoveing, itemList[i].name);
+            line.pathLine = itemList[i].pathLine;
+            drawio.shapes.push(line);
+          }
         }
-        else if(itemList[i].name === 'circle') {
-          drawio.shapes.push(new Circle({ x: itemList[i].position.x, y: itemList[i].position.y }, itemList[i].width, itemList[i].height, itemList[i].widthPick, itemList[i].colorPick, itemList[i].isMoveing, itemList[i].isFilled, itemList[i].name))
-        }
-        else if(itemList[i].name === 'draw') {
-          var draw = new Draw({ x: itemList[i].position.x, y: itemList[i].position.y }, itemList[i].width, itemList[i].height, itemList[i].widthPick, itemList[i].colorPick, itemList[i].isMoveing, itemList[i].name);
-          draw.arrx = itemList[i].arrx;
-          draw.pathLine = itemList[i].pathLine;
-          drawio.shapes.push(draw);
-        }
-        else if(itemList[i].name === 'text') {
-          var theText = new Text({ x: itemList[i].position.x, y: itemList[i].position.y }, itemList[i].textBox, itemList[i].colorPick, itemList[i].fontFamilyPick, itemList[i].widthPick, itemList[i].isMoveing, itemList[i].name);
-          theText.pathLine = itemList[i].pathLine;
-          drawio.shapes.push(theText);
-        }
-        else if(itemList[i].name === 'line') {
-          var line = new Line({ x: itemList[i].position.x, y: itemList[i].position.y }, itemList[i].width, itemList[i].height, itemList[i].widthPick ,itemList[i].colorPick, itemList[i].isMoveing, itemList[i].name);
-          line.pathLine = itemList[i].pathLine;
-          drawio.shapes.push(line);
-        }
-      }
     }
 
     const form = document.querySelector('form');
@@ -217,62 +221,59 @@ $(function () {
     localStorage.setItem('items', JSON.stringify(itemsArray));
     const data = JSON.parse(localStorage.getItem('items'));
 
+    // Creates all the options in the select list of the canvases
     const liMaker = (text) => {
-      const option = document.createElement('option');
-      option.text = text;
-      option.value = text;
-      selectCanvas[0].appendChild(option);
+        const option = document.createElement('option');
+        option.text = text;
+        option.value = text;
+        selectCanvas[0].appendChild(option);
     }
     // This button is for saving the current canvas to the localstorage
     $('#save-canvas').on('click', function(e) {
-      for (i = 0; i < itemsArray.length; i++) {
-        if (itemsArray[i] === input.value) {
-          // Don't erase this alert!!
-          alert("")
+        // Checks if the input already exists
+        for (i = 0; i < itemsArray.length; i++) {
+          if (itemsArray[i] === input.value) {
+            // Don't erase this alert!!
+            alert("This name already exists!")
+            return;
+          }
         }
-      }
-
-      if (input.value) {
-        itemsArray.push(input.value);
-        localStorage.setItem('items', JSON.stringify(itemsArray));
-        console.log(input.value)
-        localStorage.setItem(input.value, JSON.stringify(drawio.shapes));
-        liMaker(input.value);
-        input.value = "";
-      }
-      else {
-        // Don't erase this alert!!
-        alert("You must give the canvas a name before saving!");
-      }
+        // Checks if the input is not empty
+        if (input.value) {
+          itemsArray.push(input.value);
+          localStorage.setItem('items', JSON.stringify(itemsArray));
+          localStorage.setItem(input.value, JSON.stringify(drawio.shapes));
+          liMaker(input.value);
+          input.value = "";
+        }
+        else {
+          // Don't erase this alert!!
+          alert("You must give the canvas a name before saving!");
+        }
     })
 
+    // Makes sure that the list of available saves canvases gets printed out when the page loads
     data.forEach(item => {
-      liMaker(item);
+        liMaker(item);
     });
 
     button.addEventListener('click', function () {
-      localStorage.clear();
-      console.log(selectCanvas[0].options);
-      selectCanvas[0].options.length = 0;
+        localStorage.clear();
+        selectCanvas[0].options.length = 0;
 
-      itemsArray = [];
+        itemsArray = [];
     });
 
-    // This button is for getting the last saved canvas from the localstorage
+    // This button is for getting the selected saved canvas from the localstorage
     $('#retrieve-localstorage').on('click', function(e) {
       // Checks if there is something saved in the localstorage
-      var selectedCanvas = $(".select :selected").text();
-      console.log(selectedCanvas);
-      if(localStorage.getItem(selectedCanvas)) {
-        var items =  JSON.parse(localStorage.getItem(selectedCanvas));
-        console.log(items);
-        // converts the items to their previous shapes
-        convertToShapes(items);
-        drawCanvas();
-      }
-    })
-    $('#clear-localstorage').on('click', function(e) {
-      localStorage.clear();
+        var selectedCanvas = $(".select :selected").text();
+        if(localStorage.getItem(selectedCanvas)) {
+          var items =  JSON.parse(localStorage.getItem(selectedCanvas));
+          // converts the items to their previous shapes
+          convertToShapes(items);
+          drawCanvas();
+        }
     })
 });
 
