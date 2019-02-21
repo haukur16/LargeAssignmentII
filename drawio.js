@@ -3,6 +3,7 @@ window.drawio = {
     shapes: [], // Holds all elements on the canvas
     removedShapes: [], // Undo button
     moveingShape: [], // Holds the moveing element
+    shapeColor: [],
     arrx: [], // Holds drawing potitions
     selectedShape: 'draw',
     fontFamilyPick: 'Arial',
@@ -14,6 +15,7 @@ window.drawio = {
     widthPick: document.querySelector('.width-picker'),
     textBox: document.getElementById('idTextBox'),
     selectedElement: null,
+    selectedToColorFill: null,
     isMoveing: false,
     availableShapes: {
         RECTANGLE: 'rectangle',
@@ -21,7 +23,8 @@ window.drawio = {
         LINE: 'line',
         DRAW: 'draw',
         TEXT: 'text',
-        MOVE: 'move'
+        MOVE: 'move',
+        NEWcolor: 'newColor'
     }
 };
 
@@ -141,6 +144,22 @@ $(function () {
                 }
             }
             break;
+            case drawio.availableShapes.NEWcolor:
+            for(var i = 0; i<drawio.shapes.length; i++){
+                var x = mouseEvent.offsetX;
+                var y = mouseEvent.offsetY;
+                if(drawio.shapes[i].pointStroke(x, y) || drawio.shapes[i].pointPath(x, y)){
+                    console.log(drawio.shapes[i].constuctor.name);
+                    var shapeName = drawio.shapes[i].constuctor.name;
+                    console.log(shapeName);
+                    drawio.shapeColor = drawio.shapes.splice(i, 1);
+                    var calling = drawio.shapeColor[drawio.shapeColor.length -1];
+                    calling.colorPick = drawio.colorPick.value;
+                    drawio.selectedToColorFill = new calling.constuctor();
+                    drawio.selectedToColorFill = calling;
+                }
+            }
+            break;
         }
     });
 
@@ -160,6 +179,15 @@ $(function () {
             drawio.selectedElement.isMoveing = false;
             drawio.shapes.push(drawio.selectedElement);
             drawio.selectedElement = null;
+            console.log(drawio.shapes);
+            console.log(drawio.removedShapes);
+        }
+        else if(drawio.selectedToColorFill) {
+            drawio.shapes.push(drawio.selectedToColorFill);
+            drawio.ctx.clearRect(0, 0, drawio.canvas.width, drawio.canvas.height);
+            drawCanvas();
+            drawio.selectedToColorFill = null;
+            console.log(drawio.shapes);
         }
     });
 
