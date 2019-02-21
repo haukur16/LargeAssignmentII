@@ -37,7 +37,7 @@ function Rectangle(position, width, height, colorPick, widthPick, isMoveing, isF
     this.isFilled = isFilled;
     this.pathLine;
 };
-function Line(position, width, height, widthPick, colorPick, isMoveing, name) {
+function Line(position, width, height, widthPick, colorPick, isMoveing, name, isMoved) {
     Shape.call(this, position, name);
     this.width = width;
     this.height = height;
@@ -45,8 +45,9 @@ function Line(position, width, height, widthPick, colorPick, isMoveing, name) {
     this.colorPick = colorPick;
     this.isMoveing = isMoveing;
     this.pathLine;
+    this.isMoved = isMoved;
 };
-function Circle(position, width, height, widthPick, colorPick, isMoveing, isFilled, name) {
+function Circle(position, width, height, widthPick, colorPick, isMoveing, isFilled, name, isMoved) {
     Shape.call(this, position, name);
     this.width = width;
     this.height = height;
@@ -55,6 +56,7 @@ function Circle(position, width, height, widthPick, colorPick, isMoveing, isFill
     this.isMoveing = isMoveing;
     this.isFilled = isFilled;
     this.pathLine;
+    this.isMoved = isMoved;
 };
 function Draw(position, width, height, widthPick, colorPick, isMoveing, arrx, name) {
     Shape.call(this, position, name);

@@ -15,6 +15,8 @@ window.drawio = {
     textBox: document.getElementById('idTextBox'),
     selectedElement: null,
     isMoveing: false,
+    // This is a array to stores objects in that were created by moving another object
+    movedShapes: [],
     availableShapes: {
         RECTANGLE: 'rectangle',
         CIRCLE: 'circle',
@@ -60,20 +62,47 @@ $(function () {
     // This function undoes the last drawn object
     $('#undo').on('click', function() {
         if (drawio.shapes.length > 0) {
-            let undo = drawio.shapes.pop();
-            drawio.removedShapes.push(undo);
-            drawio.ctx.clearRect(0, 0, drawio.canvas.width, drawio.canvas.height);
-            drawCanvas();
+            // Checks if the newest object in the shapes array is object that was moved
+            if (drawio.shapes[drawio.shapes.length - 1].isMoved === true) {
+                let undo = drawio.shapes.pop();
+                // Pushes the newest object from the movedshapes array to the front of the shapes array
+                drawio.shapes.unshift(drawio.movedShapes[drawio.movedShapes.length - 1]);
+                // Checks if there is one object left in the movedshapes itemsArray
+                // if so it needs to push a object to the removedshapes array so that the redo function works
+                if (drawio.movedShapes.length === 1) {
+                  drawio.removedShapes.push(undo);
+                }
+                drawio.movedShapes.pop();
+                drawio.ctx.clearRect(0, 0, drawio.canvas.width, drawio.canvas.height);
+                drawCanvas();
+            }
+            else {
+              let undo = drawio.shapes.pop();
+              drawio.removedShapes.push(undo);
+              drawio.ctx.clearRect(0, 0, drawio.canvas.width, drawio.canvas.height);
+              drawCanvas();
+            }
         }
     });
 
     // This function redoes the last undone object
     $('#redo').on('click', function() {
         if (drawio.removedShapes.length > 0) {
+          // if the newest object in the removedshapes array is a moved object, it needs to handle it differently
+          if (drawio.removedShapes[drawio.removedShapes.length - 1].isMoved === true) {
+            drawio.movedShapes.push(drawio.shapes[drawio.shapes.length - 1]);
+            drawio.shapes.pop();
             let redo = drawio.removedShapes.pop();
             drawio.shapes.push(redo);
             drawio.ctx.clearRect(0, 0, drawio.canvas.width, drawio.canvas.height);
             drawCanvas();
+          }
+          else {
+            let redo = drawio.removedShapes.pop();
+            drawio.shapes.push(redo);
+            drawio.ctx.clearRect(0, 0, drawio.canvas.width, drawio.canvas.height);
+            drawCanvas();
+          }
         }
     });
 
@@ -87,20 +116,20 @@ $(function () {
     $('#my-canvas').on('mousedown', function(mouseEvent) {
         switch (drawio.selectedShape) {
             case drawio.availableShapes.RECTANGLE:
-            drawio.selectedElement = new Rectangle({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, 0, 0, drawio.colorPick, drawio.widthPick, drawio.isMoveing, drawio.isFilled, "rectangle");
+            drawio.selectedElement = new Rectangle({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, 0, 0, drawio.colorPick, drawio.widthPick, drawio.isMoveing, drawio.isFilled, "rectangle", false);
             break;
             case drawio.availableShapes.LINE:
-            drawio.selectedElement = new Line({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, 0, 0, drawio.widthPick ,drawio.colorPick, drawio.isMoveing, "line");
+            drawio.selectedElement = new Line({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, 0, 0, drawio.widthPick ,drawio.colorPick, drawio.isMoveing, "line", false);
             break;
             case drawio.availableShapes.CIRCLE:
-            drawio.selectedElement = new Circle({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, 0, 0, drawio.widthPick, drawio.colorPick, drawio.isMoveing, drawio.isFilled, "circle");
+            drawio.selectedElement = new Circle({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, 0, 0, drawio.widthPick, drawio.colorPick, drawio.isMoveing, drawio.isFilled, "circle", false);
             break;
             case drawio.availableShapes.DRAW:
             drawio.arrx = [];
-            drawio.selectedElement = new Draw({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, 0, 0, drawio.widthPick, drawio.colorPick, drawio.isMoveing, drawio.arrx, "draw");
+            drawio.selectedElement = new Draw({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, 0, 0, drawio.widthPick, drawio.colorPick, drawio.isMoveing, drawio.arrx, "draw", false);
             break;
             case drawio.availableShapes.TEXT:
-            drawio.selectedElement = new Text({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, drawio.textBox, drawio.colorPick, drawio.fontFamilyPick, drawio.widthPick, drawio.isMoveing, "text");
+            drawio.selectedElement = new Text({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, drawio.textBox, drawio.colorPick, drawio.fontFamilyPick, drawio.widthPick, drawio.isMoveing, "text", false);
             $(drawio.textBox).css({"top": mouseEvent.pageY, "left": mouseEvent.pageX});
 			      $(drawio.textBox).show();
             break;
@@ -109,35 +138,46 @@ $(function () {
                 var x = mouseEvent.offsetX;
                 var y = mouseEvent.offsetY;
                 if(drawio.shapes[i].pointStroke(x, y) && drawio.shapes[i].constuctor.name == "Line") {
+                    drawio.movedShapes.push(drawio.shapes[i]);
+                    // drawio.movedShapes[i].isMoved = true;
                     drawio.moveingShape = drawio.shapes.splice(i, 1);
                     var calling = drawio.moveingShape[drawio.moveingShape.length -1];
                     drawio.isMoveing = true;
-                    drawio.selectedElement = new Line({ x: x, y: mouseEvent.offsetY }, calling.width, calling.height, calling.widthPick ,calling.colorPick, drawio.isMoveing, "line");
-                    break;
+                    drawio.selectedElement = new Line({ x: x, y: mouseEvent.offsetY }, calling.width, calling.height, calling.widthPick ,calling.colorPick, drawio.isMoveing, "line", true);
+                    drawio.selectedElement.isMoved = true;
                 }
                 else if(drawio.shapes[i].pointStroke(x, y) && drawio.shapes[i].constuctor.name == "Circle" || drawio.shapes[i].pointPath(x, y) && drawio.shapes[i].constuctor.name == "Circle") {
+                    drawio.movedShapes.push(drawio.shapes[i]);
+                    // drawio.movedShapes[i].isMoved = true;
                     drawio.moveingShape = drawio.shapes.splice(i, 1);
                     var calling = drawio.moveingShape[drawio.moveingShape.length -1];
                     drawio.isMoveing = true;
-                    drawio.selectedElement = new Circle({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, calling.width, calling.height, calling.widthPick, calling.colorPick, drawio.isMoveing, calling.isFilled, "circle");
+                    drawio.selectedElement = new Circle({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, calling.width, calling.height, calling.widthPick, calling.colorPick, drawio.isMoveing, calling.isFilled, "circle", true);
+                    drawio.selectedElement.isMoved = true;
                 }
                 else if(drawio.shapes[i].pointStroke(x, y) && drawio.shapes[i].constuctor.name == "Draw" ) {
+                    drawio.movedShapes.push(drawio.shapes[i]);
                     drawio.moveingShape = drawio.shapes.splice(i, 1);
                     var calling = drawio.moveingShape[drawio.moveingShape.length -1];
                     drawio.isMoveing = true;
-                    drawio.selectedElement = new Draw({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, calling.width, calling.height, calling.widthPick, calling.colorPick, drawio.isMoveing, calling.arrx, "draw");
+                    drawio.selectedElement = new Draw({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, calling.width, calling.height, calling.widthPick, calling.colorPick, drawio.isMoveing, calling.arrx, "draw", true);
+                    drawio.selectedElement.isMoved = true;
                 }
                 else if(drawio.shapes[i].pointStroke(x, y) && drawio.shapes[i].constuctor.name == "Rectangle" || drawio.shapes[i].pointPath(x, y) && drawio.shapes[i].constuctor.name == "Rectangle") {
+                    drawio.movedShapes.push(drawio.shapes[i]);
                     drawio.moveingShape = drawio.shapes.splice(i, 1);
                     var calling = drawio.moveingShape[drawio.moveingShape.length -1];
                     drawio.isMoveing = true;
-                    drawio.selectedElement = new Rectangle({ x: mouseEvent.offsetX , y: mouseEvent.offsetY }, calling.width, calling.height, calling.colorPick, calling.widthPick, drawio.isMoveing, calling.isFilled, "rectangle");
+                    drawio.selectedElement = new Rectangle({ x: mouseEvent.offsetX , y: mouseEvent.offsetY }, calling.width, calling.height, calling.colorPick, calling.widthPick, drawio.isMoveing, calling.isFilled, "rectangle", true);
+                    drawio.selectedElement.isMoved = true;
                 }
                 else if(drawio.shapes[i].textSize(x, y) && drawio.shapes[i].constuctor.name == "Text" ) {
+                    drawio.movedShapes.push(drawio.shapes[i]);
                     drawio.moveingShape = drawio.shapes.splice(i, 1);
                     var calling = drawio.moveingShape[drawio.moveingShape.length -1];
                     drawio.isMoveing = true;
-                    drawio.selectedElement = new Text({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, calling.textBox, calling.colorPick, calling.fontFamilyPick, calling.widthPick, drawio.isMoveing, "text");
+                    drawio.selectedElement = new Text({ x: mouseEvent.offsetX, y: mouseEvent.offsetY }, calling.textBox, calling.colorPick, calling.fontFamilyPick, calling.widthPick, drawio.isMoveing, "text", true);
+                    drawio.selectedElement.isMoved = true;
                 }
             }
             break;
@@ -211,6 +251,7 @@ $(function () {
         }
     }
 
+    // These are all for the localstorage
     const form = document.querySelector('form');
     const selectCanvas = document.getElementsByClassName('select');
     const option = document.querySelector('option');
