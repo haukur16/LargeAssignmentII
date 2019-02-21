@@ -73,9 +73,57 @@ p {
     color: orange;
     cursor: pointer;
 }
-.fill.filled {
-    color:yellow;
+.fill i .tooltiptext{
+    visibility: hidden;
+    width: 100px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    font-size: 10px;
+    border-radius: 6px;
+    padding: 5px 0;
+        
+        /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    top: 100%;
+    left: 50%;
+    margin-left: -60px;
 }
+.fill:hover .tooltiptext {
+    visibility: visible;
+}
+.icon i .tooltiptext{
+    visibility: hidden;
+    width: 100px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    font-size: 10px;
+    border-radius: 6px;
+    padding: 5px 0;
+        
+        /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    top: 100%;
+    left: 50%;
+    margin-left: -60px;
+}
+.icon:hover .tooltiptext {
+    visibility: visible;
+}
+.fill.filled {
+    color:red;
+}
+.fill.filled .tooltiptext {
+    visibility: visible;
+}
+
+.icon.selected .tooltiptext {
+    visibility: visible;
+}
+
 .navbar {
     height: 100px;
     background-color: rgb(185, 230, 196);
@@ -102,9 +150,12 @@ p {
 #idTextBox {
 position:absolute;
 }
-
+.panel {
+    position: relative;
+}
 #panel-left {
-    top: 22px;
+    position: relative;
+    top: 75px;
     width: 200px;
     height: 92px;
     margin-left: 70px;
