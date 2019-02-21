@@ -79,11 +79,10 @@ p {
     background-color: black;
     color: #fff;
     text-align: center;
-    font-size: 10px;
+    font-size: 15px;
     border-radius: 6px;
     padding: 5px 0;
         
-        /* Position the tooltip */
     position: absolute;
     z-index: 1;
     top: 100%;
@@ -95,11 +94,11 @@ p {
 }
 .icon i .tooltiptext{
     visibility: hidden;
-    width: 100px;
+    width: 100%;
     background-color: black;
     color: #fff;
     text-align: center;
-    font-size: 10px;
+    font-size: 15px;
     border-radius: 6px;
     padding: 5px 0;
         
