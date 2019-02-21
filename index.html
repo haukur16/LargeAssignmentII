@@ -3,145 +3,58 @@
     <head>
         <meta charset="utf-8">
         <title>DRAWIO</title>
-        <style media="screen">
-            html, body { height: 100%; }
-
-            * {
-                box-sizing: border-box;
-                font-family: Cooper Black}
-            body {
-                padding: 0;
-                margin: 0;
-                background-color: #FFE4DE;
-            }
-            .container {
-                padding: 20px;
-            }
-            #my-canvas {
-                background-color: rgba(155, 155, 155, 0.2);
-                box-shadow: 1px 1px 1px;
-                margin: 0 auto;
-                display: block;
-            }
-            .icon {
-                position: relative;
-                display: inline-block;
-                font-size: 4em;
-                float: right;
-                width: 100px;
-                top: 15px;
-                transition: color .5s;
-
-            }
-            .fill {
-                position: relative;
-                padding-left:20px;
-                margin-right: 50px;
-                border: solid 6px black;
-                display: inline-block;
-                font-size: 5em;
-                float: right;
-                width: 100px;
-                height: 100%;
-                transition: color .5s;
-            }
-            .top-container {
-                height: 50px;
-                width: 100%;
-            }
-            .picker {
-                position: relative;
-                display: inline-block;
-                height: 100%;
-            }
-
-            .icon:hover {
-                color: orange;
-                cursor: pointer;
-            }
-            .fill:hover {
-                color:yellow;
-            }
-            .fill.filled {
-                color:yellow;
-            }
-            .icon.selected {
-                color:yellow;
-            }
-            .navbar {
-                height: 100px;
-                background-color: #C70039;
-                border-bottom: solid 6px #900C3F;
-            }
-            .header {
-                display: inline-flex;
-                color: yellow;
-                font-size: 30px;
-                margin-left: 50px;
-            }
-            #pencil-pic {
-                width: 90px;
-                height: 100px;
-            }
-            .undo:hover {
-                color: red;
-                cursor: pointer;
-            }
-            #idTextBox {
-            position:absolute;
-            }
-
-        </style>
+        <link rel="stylesheet" href="./styles/styles.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
-
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     </head>
     <body>
-        <nav class="navbar">
+        <nav class="navbar navbar-fixed-top">
             <div class="header">
-                <img id="pencil-pic" src="pencil_icon.png" alt="pencil">
-                <h1>DRAWIO</h1>
+                <img id="pencil-pic" src="image/pencil_icon.png" alt="pencil">
+                <h1 id="header">My DRAWIO</h1>
             </div>
-            <div class="icon" data-shape="rectangle">
-                <i class="fa fa-square-o" area-hidden="true"></i>
+            <div class="icon" data-shape="rectangle" title="Rectangle">
+                <i class="fa fa-square-o" area-hidden="true"><span class="tooltiptext">Rectangle</span></i>
             </div>
-            <div class="icon" data-shape="circle">
-                <i class="fa fa-circle-o" area-hidden="true"></i>
+            <div class="icon" data-shape="circle" title="Circle">
+                <i class="fa fa-circle-o" area-hidden="true"><span class="tooltiptext">Circle</span></i>
             </div>
-            <div class="icon selected" data-shape="draw">
-                <i class="fa fa-pencil" area-hidden="true"></i>
+            <div class="icon selected" data-shape="draw" title="Pencil">
+                <i class="fa fa-pencil" area-hidden="true"><span class="tooltiptext">Pencil</span></i>
             </div>
-            <div class="icon" data-shape="line">
-                <i class="fa fa-arrows-v" area-hidden="true"></i>
+            <div class="icon" data-shape="line" title="Straight line">
+                <i class="fa fa-arrows-v" area-hidden="true"><span class="tooltiptext">Line</span></i>
             </div>
-            <div class="icon" data-shape="text">
-                <i class="fa fa-font" area-hidden="true"></i>
+            <div class="icon" data-shape="text" title="Textbox">
+                <i class="fa fa-font" area-hidden="true"><span class="tooltiptext">Textbox</span></i>
             </div>
-            <div class="icon" id="move" data-shape="move">
-                <i class="fa fa-arrows" area-hidden="true"></i>
+            <div class="icon" id="move" data-shape="move" title="Move object">
+                <i class="fa fa-arrows" area-hidden="true"><span class="tooltiptext">Move objects</span></i>
             </div>
-            <div class="fill filled" data-shape="fill">
-                <i class="fa fa-tint" area-hidden="true"></i><br>
+            <div class="icon" data-shape="newColor" title="Change color">
+                <i class="fa fa-eyedropper" area-hidden="true"><span class="tooltiptext">Change object color</span></i>
+            </div>
+            <div class="fill filled" data-shape="fill" title="Object filled">
+                <i class="fa fa-tint" area-hidden="true"><span class="tooltiptext">Red is filled, black is stroke</span></i>
             </div>
         </nav>
-
-        <div class = "top-container">
+            <div class="panel" id="panel-left">
+                <div class="picker" id="undo" data-shape="undo">
+                    <button class="fa fa-undo btn-lg" area-hidden="true" title="Undo"></button>
+                </div>
+                <div class="picker" id="redo" data-shape="redo">
+                    <button class="fa fa-repeat btn-lg" area-hidden="true" title="Redo"></button>
+                </div>
             <div class ="picker">
                 <label for="color">Color:</label>
-                <input type="color"  class="color-picker" value="#000000" name="color">
+                <input type="color"  class="color-picker" value="#000000" name="color" title="Pick your color!">
             </div>
             <div class="picker">
-                <input type="range" name="width" min="1" max="42" value="15" class="width-picker" id="myRange">
+                <input type="range" name="width" min="1" max="42" value="15" class="width-picker" id="myRange" title="Choose pencil width!">
                 <p>Width: <span id="demo"></span></p>
             </div>
-            <div class="picker" id="undo" data-shape="undo">
-                <button class="fa fa-undo" area-hidden="true" ></button>
-            </div>
-            <div class="picker" id="redo" data-shape="redo">
-                <button class="fa fa-repeat" area-hidden="true" ></button>
-            </div>
-            <div>
                 <div class="font-pick">
-                <label for="font-type">Font Type:</label>
+                <label for="font-type" title="Pick your font!">Font Type:</label>
                     <select id="selectFontFamily" name="selectFontFamily">
                         <option> Arial </option>
                         <option> Verdana </option>
@@ -152,33 +65,28 @@
                     </select>
                 </div>
             </div>
-        </div>
-
-        <div class="container">
-            <canvas id="my-canvas" width="800" height="600">
+            <div class="container">
+                <canvas id="my-canvas" width="800" height="600">
                 Not supported
-            </canvas>
-            <input type="text" id="idTextBox" name="text" hidden></input>
-        </div>
-
-        <button type="button" name="button" id="save-canvas">Save canvas to local storage</button>
-        <button type="button" name="button" id="retrieve-localstorage">Retrieve local storage</button>
-
-        <div class="small-container">
-        <h1>Enter a name for your canvas:</h1>
-        <form>
-          <input id="item" type="text" placeholder="New">
-        </form>
-        <h3>When finished writing a name for your canvas, click save canvas to save it to local storage</h3>
-        <h2>Saved Canvases:</h2>
-        <select class="select" name="">
-
-        </select>
-        <h3>Select which canvas you want to retrieve, then click retrieve local storage button</h3>
-
-        <button id="clear">Clear all saved canvases</button>
-        </div>
-        
+                </canvas>
+                <input type="text" id="idTextBox" name="text" hidden></input>
+            </div>
+            <div class="container" id="bottom-container">
+                <button type="button" name="button" id="save-canvas" title="Save canvas to local storage">Save canvas</button>
+                <button type="button" name="button" id="retrieve-localstorage" title="Retrieve local storage">Retrieve</button>
+                    <div class="small-container">
+                        <h3>Enter a name for your canvas:</h3>
+                            <form>
+                                <input id="item" type="text" placeholder="My Canvas">
+                            </form>
+                            <p>When finished writing a name for your canvas click save canvas</p>
+                            <p>Saved Canvases:</p>
+                            <select class="select" name=""></select>
+                            <p>Select which canvas you want to retrieve, </br>
+                                then click the retrieve button</p>
+                            <button id="clear">Clear all saved canvases</button>
+                    </div>
+            </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js" charset="utf-8"></script>
         <script src="shapes.js" charset="utf-8"></script>
         <script src="drawio.js" charset="utf-8"></script>

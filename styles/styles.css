@@ -1,0 +1,173 @@
+html, body { height: 100%; }
+
+* {
+    box-sizing: border-box;
+    font-family: Georgia;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+}
+
+p {
+    color: rgb(83, 117, 82);
+    font-weight: bold;
+}
+
+#header {
+    font-weight: bold;
+    margin-left: 40px;
+    font-size: 60px;
+    color: rgb(159, 197, 137);
+    text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000; 
+}
+
+#my-canvas {
+    background-color: rgba(155, 155, 155, 0.2);
+    box-shadow: 1px 1px 1px;
+    margin: 0 auto;
+    display: block;
+    border-radius: 8px;
+}
+
+.icon {
+    position: relative;
+    display: inline-block;
+    font-size: 4em;
+    float: right;
+    width: 100px;
+    top: 15px;
+    transition: color .5s;
+}
+.fill {
+    position: relative;
+    display: inline-block;
+    font-size: 4em;
+    float: right;
+    width: 100px;
+    top: 15px;
+    transition: color .5s;
+
+}
+
+.picker {
+    position: relative;
+    display: inline-block;
+    height: 100%;
+}
+
+.icon:hover {
+    color: orange;
+    cursor: pointer;
+}
+
+.icon.selected {
+    color:yellow;
+}
+.fill:hover {
+    color: orange;
+    cursor: pointer;
+}
+.fill i .tooltiptext{
+    visibility: hidden;
+    width: 100px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    font-size: 10px;
+    border-radius: 6px;
+    padding: 5px 0;
+        
+        /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    top: 100%;
+    left: 50%;
+    margin-left: -60px;
+}
+.fill:hover .tooltiptext {
+    visibility: visible;
+}
+.icon i .tooltiptext{
+    visibility: hidden;
+    width: 100px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    font-size: 10px;
+    border-radius: 6px;
+    padding: 5px 0;
+        
+        /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    top: 100%;
+    left: 50%;
+    margin-left: -60px;
+}
+.icon:hover .tooltiptext {
+    visibility: visible;
+}
+.fill.filled {
+    color:red;
+}
+.fill.filled .tooltiptext {
+    visibility: visible;
+}
+
+.icon.selected .tooltiptext {
+    visibility: visible;
+}
+
+.navbar {
+    height: 100px;
+    background-color: rgb(185, 230, 196);
+    border-bottom: solid 6px rgb(185, 230, 196);
+}
+
+.header {
+    display: inline-flex;
+    color: yellow;
+    font-size: 40px;
+    margin-left: 50px;
+}
+
+#pencil-pic {
+    width: 90px;
+    height: 100px;
+}
+
+.undo:hover {
+    color: red;
+    cursor: pointer;
+}
+
+#idTextBox {
+position:absolute;
+}
+.panel {
+    position: relative;
+}
+#panel-left {
+    position: relative;
+    top: 75px;
+    width: 200px;
+    height: 92px;
+    margin-left: 70px;
+    margin-top: 40px;
+}
+
+#bottom-container {
+    text-align: center;
+    padding: 12px; 
+    border: 1px solid rgba(204, 204, 204, 0.952);
+    border-radius: 4px; 
+    box-sizing: border-box; 
+    margin-top: 6px; 
+    margin-bottom: 16px; 
+}
